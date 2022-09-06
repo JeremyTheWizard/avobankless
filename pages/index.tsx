@@ -21,7 +21,7 @@ const Home: NextPage = () => {
 
       <main className="flex flex-col mx-auto">
         <section className="grid grid-cols-2">
-          <div className="mt-7">
+          <div className="space-y-md2">
             <h2 className="text-red capitalize tracking-wide">
               We Make Credit{" "}
               <span className="bg-object bg-clip-text text-transparent font-bold">
@@ -29,7 +29,7 @@ const Home: NextPage = () => {
               </span>
               New Generations
             </h2>
-            <p className="text-display-9 mt-9 mb-11">
+            <p className="text-display-9">
               The Decentralized Credit Bureau For The Unbanked.
               <br /> Inclusive, Secure And Private.
             </p>
@@ -38,16 +38,14 @@ const Home: NextPage = () => {
               <SlideDeckButton />
             </div>
           </div>
-          <div className="">
-            <div className="absolute top-4">
+            <div className="">
               <img
                 src="/homepage-gif.png"
                 alt="representation of the protocol"
               />
-            </div>
           </div>
         </section>
-        <section className="mt-40 text-display-6 flex justify-center">How it works?</section>
+        <section className="mt-lg text-display-6 flex justify-center">How it works?</section>
       </main>
       <footer></footer>
     </div>

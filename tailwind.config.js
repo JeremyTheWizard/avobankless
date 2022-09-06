@@ -40,6 +40,16 @@ module.exports = {
       padding: {
         18: "18px",
       },
+      spacing: {
+        xs: "0.5rem",
+        sm: "1.5rem",
+        md1: "2.25rem",
+        md2: "2.75rem",
+        lg: "6rem",
+        xl: "8rem",
+        "2xl": "12rem",
+        "3xl": "20rem",
+      },
     },
     plugins: [],
   },

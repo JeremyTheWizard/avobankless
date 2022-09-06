@@ -5,7 +5,7 @@ import ScoreButton from "./buttons/scoreButton";
 export const Navbar = () => {
   const navbar = () => {
     return (
-      <nav className="max-w-[1536px] flex items-center justify-between py-7 z-[999]">
+      <nav className="max-w-[1536px] flex items-center justify-between py-sm z-[999] mb-md1">
         <LINK href="/">
             <Image
               src="/avobankless-logo.png"

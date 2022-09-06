@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <meta charSet="utf-8" />
     <meta name="theme-color" content="#000000" />
   </Head>;
-  return <><div className="h-screen bg-body"><div className="max-w-[1440px] px-32 flex flex-col mx-auto"><Navbar /><Component {...pageProps} /></div></div></>;
+  return <><div className="h-screen bg-body"><div className="max-w-[1440px] px-lg flex flex-col mx-auto"><Navbar /><Component {...pageProps} /></div></div></>;
 }
 
 export default MyApp;
