@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6, button {
+    @apply font-mulish;
+  }
+
+  h1 {
+    @apply text-display-6 sm:text-display-5 md:text-display-4 lg:text-display-3 2xl:text-display-1;
+  }
+
+  h2 {
+    @apply text-display-6 sm:text-display-4 md:text-display-5;
+  }
+
+  h3 {
+    @apply text-display-9 md:text-display-8;
+  }
+}
