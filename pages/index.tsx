@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import ScoreButton from "../components/navbar/buttons/scoreButton";
 import SlideDeckButton from "../components/navbar/buttons/slideDeckButton";
-import { Navbar } from "../components/navbar/navbar";
 
 const Home: NextPage = () => {
   return (
@@ -21,7 +20,6 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex flex-col mx-auto">
-        <Navbar />
         <section className="grid grid-cols-2">
           <div className="mt-7">
             <h2 className="text-red capitalize tracking-wide">
