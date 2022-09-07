@@ -1,5 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import ScoreButton from "../components/navbar/buttons/scoreButton";
+import SlideDeckButton from "../components/navbar/buttons/slideDeckButton";
+import { Navbar } from "../components/navbar/navbar";
 
 const Home: NextPage = () => {
   return (
@@ -11,20 +14,43 @@ const Home: NextPage = () => {
           content="Decentralized credit bureau for unbanked people on Latam"
         />
         <link rel="icon" href="/favicon.png" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
 
-      <main className="w-[95vw] mx-auto">
-        <div className="flex flex-col items-center justify-center h-screen text-center">
-          <h1 className="text-3xl md:text-6xl lg:text-8xl">
-            Welcome to <span className="text-teal-600">avobankless!</span>
-          </h1>
-
-          <p className="text-lg md:text-2xl">
-            Decentralized credit bureau for unbanked people on Latam
-          </p>
-        </div>
+      <main className="flex flex-col mx-auto">
+        <Navbar />
+        <section className="grid grid-cols-2">
+          <div className="mt-7">
+            <h2 className="text-red capitalize tracking-wide">
+              We Make Credit{" "}
+              <span className="bg-object bg-clip-text text-transparent font-bold">
+                Possible For All{" "}
+              </span>
+              New Generations
+            </h2>
+            <p className="text-display-9 mt-9 mb-11">
+              The Decentralized Credit Bureau For The Unbanked.
+              <br /> Inclusive, Secure And Private.
+            </p>
+            <div className="flex gap-6">
+              <ScoreButton />
+              <SlideDeckButton />
+            </div>
+          </div>
+          <div className="">
+            <div className="absolute top-4">
+              <img
+                src="/homepage-gif.png"
+                alt="representation of the protocol"
+              />
+            </div>
+          </div>
+        </section>
+        <section className="mt-40 text-display-6 flex justify-center">How it works?</section>
       </main>
-
       <footer></footer>
     </div>
   );
