@@ -12,10 +12,10 @@ import worldcoinLogo from "../public/worldcoin-logo.png";
 export const creditScore: React.FC = () => {
   let userName = "Avobankless";
   return (
-    <GradientBorder twProps="p-lg grid grid-cols-2 gap-md2">
-      <div className="space-y-md1">
-        <div className="space-y-sm">
-          <h3 className="text-red">
+    <GradientBorder twProps="p-lg grid grid-cols-2 gap-md">
+      <div className="space-y-md">
+        <div className="space-y-xs">
+          <h3 className="text-darkishRed text-display-6">
             Welcome{" "}
             <span className="bg-object bg-clip-text text-transparent capitalize">{`${userName}`}</span>
             . Build Your Score! 🚀
@@ -26,8 +26,8 @@ export const creditScore: React.FC = () => {
           </p>
         </div>
         <GradientBorder twProps="p-sm space-y-xs flex flex-col">
-          <div className="flex flex-col items-center gap-sm">
-            <p className="text-display-7 font-semibold shrink-0">🥑Avo Score</p>
+          <div className="flex flex-col items-center gap-xs">
+            <h3 className="font-semibold shrink-0">🥑Avo Score</h3>
             <p>
               Multi Asset Credit Risk Score calculated from both: off-chain and
               on-chain data.{" "}
@@ -70,17 +70,17 @@ export const creditScore: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex gap-xs !mt-md2 self-center">
+          <div className="flex gap-md !mt-md self-center">
             <ScoreButton text="Calculate Score" />
             <SlideDeckButton text="Create NFTSC" />
           </div>
         </GradientBorder>
       </div>
-      <div className="space-y-md1 flex flex-col justify-between">
+      <div className="space-y-md flex flex-col justify-between">
         <GradientBorder twProps="p-sm flex items-center gap-sm">
           <img
             src={worldcoinLogo.src}
-            className="justify-self-center shrink-0 "
+            className="justify-self-center shrink-0"
           />
           <div className="space-y-xs justify-self-center">
             <h3 className="font-bold">Private identity</h3>

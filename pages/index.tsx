@@ -20,34 +20,32 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex flex-col mx-auto">
-        <section className="grid grid-cols-2">
-          <div className="space-y-md2">
-            <h2 className="text-darkishRed capitalize tracking-wide">
-              We Make Credit{" "}
-              <span className="bg-object bg-clip-text text-transparent font-bold">
-                Possible For All{" "}
-              </span>
-              New Generations
-            </h2>
-            <p className="text-display-9">
-              The Decentralized Credit Bureau For The Unbanked.
-              <br /> Inclusive, Secure And Private.
-            </p>
+        <section className="flex justify-between items-center">
+          <div className="space-y-md">
+            <div className="space-y-sm">
+              <h1 className="text-darkishRed capitalize tracking-wide whitespace-nowrap">
+                We Make Credit <br />
+                <span className="bg-object bg-clip-text text-transparent">
+                  Possible For All <br />
+                </span>
+                New Generations
+              </h1>
+              <p>
+                The Decentralized Credit Bureau For The Unbanked.
+                <br /> Inclusive, Secure And Private.
+              </p>
+            </div>
             <div className="flex gap-6">
-              <ScoreButton text="Build Your Score!"/>
-              <SlideDeckButton text="Slide deck"/>
+              <ScoreButton text="Build Your Score!" />
+              <SlideDeckButton text="Slide deck" />
             </div>
           </div>
-            <div className="">
-              <img
-                src="/homepage-gif.png"
-                alt="representation of the protocol"
-              />
-          </div>
+            <img src="/homepage-gif.png" alt="representation of the protocol" className="object-scale-down"/>
         </section>
-        <section className="mt-lg text-display-6 flex justify-center">How it works?</section>
+        <section className="mt-lg text-display-6 flex justify-center ">
+          <h2 className="font-medium">How it works?</h2>
+        </section>
       </main>
-      <footer></footer>
     </div>
   );
 };

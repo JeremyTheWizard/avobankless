@@ -5,16 +5,18 @@ import ScoreButton from "./buttons/ScoreButton";
 export const Navbar = () => {
   const navbar = () => {
     return (
-      <nav className="max-w-[1536px] flex items-center justify-between py-sm z-[999] mb-md1">
+      <nav className="max-w-[1536px] flex items-center justify-between py-sm z-[999] mb-md">
         <LINK href="/">
+          <div className="cursor-pointer">
             <Image
               src="/avobankless-logo.png"
               alt="avobankless logo"
               width="150px"
               height="36px"
             />
+          </div>
         </LINK>
-        <ScoreButton text="Build Your Score!"/>
+        <ScoreButton text="Build Your Score!" />
       </nav>
     );
   };
