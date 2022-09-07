@@ -2,7 +2,7 @@ import React from "react";
 import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 import CircleEnumeration from "../components/navbar/general/CircleEnumeration";
-import GradientBorder from "../components/navbar/general/gradientBorder";
+import GradientBorder from "../components/navbar/general/GradientBorder";
 import GradientCircularGaugeIndicator from "../components/navbar/general/GradientCircularGaugeIndicator";
 import dataOffChain from "../public/data-off-chain.png";
 import loansOpportunities from "../public/loans-opportunities.png";
