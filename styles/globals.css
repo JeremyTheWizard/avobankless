@@ -21,6 +21,9 @@
   }
 
   h3 {
-    @apply text-display-9 md:text-display-8;
+    @apply text-display-8 md:text-display-7;
+  }
+  p {
+    @apply font-poppins
   }
 }

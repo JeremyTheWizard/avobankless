@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import ScoreButton from "../components/navbar/buttons/scoreButton";
-import SlideDeckButton from "../components/navbar/buttons/slideDeckButton";
+import ScoreButton from "../components/navbar/buttons/ScoreButton";
+import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 
 const Home: NextPage = () => {
   return (
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
       <main className="flex flex-col mx-auto">
         <section className="grid grid-cols-2">
           <div className="space-y-md2">
-            <h2 className="text-red capitalize tracking-wide">
+            <h2 className="text-darkishRed capitalize tracking-wide">
               We Make Credit{" "}
               <span className="bg-object bg-clip-text text-transparent font-bold">
                 Possible For All{" "}
@@ -34,8 +34,8 @@ const Home: NextPage = () => {
               <br /> Inclusive, Secure And Private.
             </p>
             <div className="flex gap-6">
-              <ScoreButton />
-              <SlideDeckButton />
+              <ScoreButton text="Build Your Score!"/>
+              <SlideDeckButton text="Slide deck"/>
             </div>
           </div>
             <div className="">

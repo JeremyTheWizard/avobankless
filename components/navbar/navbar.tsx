@@ -1,6 +1,6 @@
 import Image from "next/image";
 import LINK from "next/link";
-import ScoreButton from "./buttons/scoreButton";
+import ScoreButton from "./buttons/ScoreButton";
 
 export const Navbar = () => {
   const navbar = () => {
@@ -14,7 +14,7 @@ export const Navbar = () => {
               height="36px"
             />
         </LINK>
-        <ScoreButton/>
+        <ScoreButton text="Build Your Score!"/>
       </nav>
     );
   };
