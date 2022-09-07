@@ -9,7 +9,7 @@ import loansOpportunities from "../public/loans-opportunities.png";
 import web3Wallet from "../public/web3-wallet.png";
 import worldcoinLogo from "../public/worldcoin-logo.png";
 
-export const creditScore: React.FC = () => {
+const creditScore: React.FC = () => {
   let userName = "Avobankless";
   return (
     <GradientBorder twProps="p-lg grid grid-cols-2 gap-md">

@@ -2,7 +2,7 @@ import Image from "next/image";
 import LINK from "next/link";
 import ScoreButton from "./buttons/ScoreButton";
 
-export const Navbar = () => {
+const Navbar: React.FC = () => {
   const navbar = () => {
     return (
       <nav className="max-w-[1536px] flex items-center justify-between py-sm z-[999] mb-md">
@@ -23,3 +23,5 @@ export const Navbar = () => {
 
   return <>{navbar()}</>;
 };
+
+export default Navbar;
