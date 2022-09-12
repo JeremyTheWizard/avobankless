@@ -15,6 +15,11 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/navbar/general/GradientCircularGaugeIndicator.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/general/GradientCircularGaugeIndicator.js"
+  ],
   "exclude": ["node_modules"]
 }
