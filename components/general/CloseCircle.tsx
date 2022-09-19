@@ -8,7 +8,7 @@ const CloseCircle = () => {
   return (
     <div
       onClick={() => dispatch(closeDialog())}
-      className="w-16 h-16 rounded-full bg-object absolute top-20 right-52 flex items-center justify-center border-2 border-almostBlack cursor-pointer"
+      className="w-16 h-16 rounded-full bg-object absolute top-20 right-0 flex items-center justify-center border-2 border-almostBlack cursor-pointer"
     >
       <AiOutlineClose size="32" color="#FDFFFB" />
     </div>

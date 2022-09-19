@@ -1,22 +1,31 @@
+import BackArrow from "../general/BackArrow";
 import CloseCircle from "../general/CloseCircle";
 import ScoreButton from "../navbar/buttons/ScoreButton";
 
 type WrapperProps = {
   children: React.ReactNode;
+  backArrow?: boolean;
 };
 
-const DialogWrapper: React.FC<WrapperProps> = ({ children }) => {
+const DialogWrapper: React.FC<WrapperProps> = ({ children, backArrow }) => {
   return (
-    <div className="absolute inset-0 z-10 w-screen h-screen space-y-md bg-white flex flex-col items-center justify-center">
-      <CloseCircle />
-      {children}
+    <div className="fixed inset-0 z-10 w-full h-full bg-white overflow-auto">
+      <div className="w-[90vw] h-full m-auto">
+        <div className="relative">
+          <CloseCircle />
+          {backArrow && <BackArrow />}
+        </div>
+        <div className="w-full h-full flex flex-col items-center justify-center space-y-md">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };
 
 export const VerifyStep1: React.FC = () => {
   return (
-    <DialogWrapper>
+    <DialogWrapper backArrow={true}>
       <div className="space-y-sm text-center">
         <h3 className="font-extrabold">Verify your identity</h3>
         <p className="w-full max-w-prose text-md">
@@ -40,4 +49,8 @@ export const VerifyStep1: React.FC = () => {
       </span>
     </DialogWrapper>
   );
+};
+
+export const VerifyStep2: React.FC = () => {
+  return <div></div>;
 };

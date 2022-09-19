@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
+    "./node_modules/flowbite-react/**/*.js",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  important: "#__next",
   theme: {
     fontFamily: {
       mulish: ["Mulish", "sans-serif"],
@@ -49,5 +51,8 @@ module.exports = {
       },
     },
     plugins: [],
+    corePlugins: {
+      preflight: false,
+    },
   },
 };

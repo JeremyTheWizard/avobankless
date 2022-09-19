@@ -1,6 +1,7 @@
+// import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import LINK from "next/link";
-import ScoreButton from "./buttons/ScoreButton";
+import { ConnectButton1 } from "../general/ConnectButton1";
 
 const Navbar: React.FC = () => {
   const navbar = () => {
@@ -16,7 +17,8 @@ const Navbar: React.FC = () => {
             />
           </div>
         </LINK>
-        <ScoreButton text="Build Your Score!" />
+        {/* <ScoreButton text="Connect Wallet" onClick={() => {}} /> */}
+        <ConnectButton1 />
       </nav>
     );
   };

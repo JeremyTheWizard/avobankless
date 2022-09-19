@@ -1,13 +1,22 @@
-import React from 'react'
+import React from "react";
 
 type Props = {
-  text: String
-}
+  text: String;
+  disabled?: boolean;
+};
 
-const SlideDeckButton: React.FC<Props> = ({text}) => {
+const SlideDeckButton: React.FC<Props> = ({ text, disabled }) => {
   return (
-    <button onClick={() => {}}className="border-[1px] px-18 py-3 text-darkishRed rounded-100 border-darkGreen">{text}</button>
-  )
-}
+    <button
+      disabled={disabled}
+      onClick={() => {}}
+      className={`border-[1px] px-18 py-3 text-darkishRed rounded-100 border-darkGreen ${
+        disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+      }`}
+    >
+      {text}
+    </button>
+  );
+};
 
-export default SlideDeckButton
+export default SlideDeckButton;

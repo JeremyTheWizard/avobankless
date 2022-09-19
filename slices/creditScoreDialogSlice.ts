@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface CreditScoreDialog {
   dialogOpen: boolean;
   dialogStep: number;
+  overflow: string;
 }
 
 const initialState: CreditScoreDialog = {
   dialogOpen: false,
   dialogStep: 0,
+  overflow: "",
 };
 
 export const creditScoreDialogSlice = createSlice({
@@ -16,9 +18,11 @@ export const creditScoreDialogSlice = createSlice({
   reducers: {
     closeDialog: (state) => {
       state.dialogOpen = false;
+      state.overflow = "overflow-visible";
     },
     openDialog: (state) => {
       state.dialogOpen = true;
+      state.overflow = "overflow-hidden";
     },
   },
 });
