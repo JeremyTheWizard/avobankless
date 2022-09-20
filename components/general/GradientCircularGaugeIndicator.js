@@ -187,7 +187,7 @@ const GradientCircularGaugeIndicator = ({ score }) => {
         stroke: {
           lineCap: "round",
         },
-        labels: [rawCreditScore ? "Credit Score" : ""],
+        labels: [score ? "Credit Score" : ""],
       });
     }
   }, [score]);

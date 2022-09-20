@@ -3,7 +3,7 @@ import React from "react";
 type Props = {
   twPropsParent?: String | undefined;
   twPropsChild?: String | undefined;
-  children?: React.ReactNode;
+  children?: React.ReactNode | React.ReactNode[];
   onClick?: () => { payload: undefined };
 };
 

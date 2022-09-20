@@ -67,6 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         width={size}
         height={size}
         style={{ borderRadius: 999 }}
+        alt="ens"
       />
     ) : (
       <img
@@ -74,6 +75,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         width={size}
         height={size}
         style={{ borderRadius: 999 }}
+        alt="avobankless pet logo"
       />
     );
   };

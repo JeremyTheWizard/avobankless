@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import Tabs from "../components/credit-score/BasicTabs";
 import GradientBorder from "../components/general/GradientBorder";
@@ -10,36 +10,32 @@ import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 
 const CreditScore: React.FC = () => {
-  const { isDisconnected, isConnected, address } = useAccount();
+  const { isDisconnected, address } = useAccount();
   const [creditScore, setCreditScore] = useState();
 
-  useEffect(() => {
-    if (isConnected) {
-      const updateExistingWalletScore = async () => {
-        const walletScore = await getExistingWalletScore();
-        if (walletScore) {
-          setCreditScore(walletScore);
-        }
-      };
-      updateExistingWalletScore();
+  const updateExistingWalletScore = useCallback(async () => {
+    if (address) {
+      let response;
+      try {
+        response = await axios.get(`api/creditscore/${address}`);
+      } catch (err) {
+        console.log(err);
+      }
+      if (response?.data.score) {
+        setCreditScore(response.data.score);
+      }
     }
-  }, [isConnected]);
+  }, [address]);
+
+  useEffect(() => {
+    updateExistingWalletScore();
+  }, [updateExistingWalletScore]);
 
   useEffect(() => {
     if (isDisconnected) {
       setCreditScore(undefined);
     }
   }, [isDisconnected]);
-
-  const getExistingWalletScore = async () => {
-    let response;
-    try {
-      response = await axios.get(`api/creditscore/${address}`);
-    } catch (err) {
-      console.log(err);
-    }
-    return response?.data.score;
-  };
 
   const calculateWalletScore = async () => {
     let response;
