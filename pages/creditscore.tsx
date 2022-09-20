@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import Tabs from "../components/credit-score/BasicTabs";
 import GradientBorder from "../components/general/GradientBorder";
@@ -10,6 +10,7 @@ import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 
 const CreditScore: React.FC = () => {
   const { isDisconnected } = useAccount();
+  const [score, setScore] = useState();
 
   return (
     <div className="space-y-md">
@@ -78,12 +79,22 @@ const CreditScore: React.FC = () => {
             </div>
             <div className="flex gap-md !mt-md self-center">
               <ScoreButton
+                size="md"
                 text="Calculate Score"
                 disabled={isDisconnected && true}
+                tooltip={isDisconnected ? "Connect your wallet first" : ""}
               />
               <SlideDeckButton
-                text="Create NFTSC"
-                disabled={isDisconnected && true}
+                size="md"
+                text="Verify"
+                disabled={(isDisconnected || !score) && true}
+                tooltip={
+                  isDisconnected
+                    ? "Connect your wallet first"
+                    : !score
+                    ? "Calculate your score first"
+                    : ""
+                }
               />
             </div>
           </GradientBorder>
@@ -121,9 +132,14 @@ const CreditScore: React.FC = () => {
               <Typography className="font-bold">$0</Typography>
             </div>
           </GradientBox>
-          <GradientBorder>
-            <Tabs />
-          </GradientBorder>
+          <div className="relative h-full">
+            <GradientBorder
+              twPropsParent={"h-full w-full absolute"}
+              twPropsChild={"overflow-y-scroll"}
+            >
+              <Tabs />
+            </GradientBorder>
+          </div>
         </div>
       </div>
     </div>

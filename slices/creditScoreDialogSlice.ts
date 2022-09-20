@@ -9,7 +9,7 @@ export interface CreditScoreDialog {
 const initialState: CreditScoreDialog = {
   dialogOpen: false,
   dialogStep: 0,
-  overflow: "",
+  overflow: "overflow-visible",
 };
 
 export const creditScoreDialogSlice = createSlice({

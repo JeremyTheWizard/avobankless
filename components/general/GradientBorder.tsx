@@ -1,16 +1,25 @@
 import React from "react";
 
 type Props = {
-  twProps?: String | undefined;
+  twPropsParent?: String | undefined;
+  twPropsChild?: String | undefined;
   children?: React.ReactNode;
   onClick?: () => { payload: undefined };
 };
 
-const GradientBorder: React.FC<Props> = ({ twProps, children, onClick }) => {
+const GradientBorder: React.FC<Props> = ({
+  twPropsParent,
+  twPropsChild,
+  children,
+  onClick,
+}) => {
   return (
-    <div onClick={onClick} className="rounded-xl bg-object p-0.5">
+    <div
+      onClick={onClick}
+      className={`rounded-xl bg-object p-0.5 ${twPropsParent}`}
+    >
       <div
-        className={`h-full bg-body rounded-xl p-sm space-y-xs flex flex-col ${twProps}`}
+        className={`h-full bg-body rounded-xl p-sm space-y-md flex flex-col items-center ${twPropsChild}`}
       >
         {children}
       </div>

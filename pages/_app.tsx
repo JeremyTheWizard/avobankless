@@ -83,7 +83,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               theme={RainbowKitTheme}
               avatar={CustomAvatar}
             >
-              <div className="h-screen bg-body overflow-hidden ">
+              <div className="h-screen bg-body">
                 <div className="w-[90vw] max-w-[1536px] mx-auto pb-24 md:text-body-1">
                   <Navbar />
                   <Component {...pageProps} />
