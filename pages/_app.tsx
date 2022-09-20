@@ -6,16 +6,21 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import { Provider } from "react-redux";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import Navbar from "../components/navbar/Navbar";
+import NavbarApp from "../components/navbar/NavbarApp";
 import { MaterialTheme } from "../MaterialTheme";
 import { store } from "../store/store";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const currentRoute = router.pathname;
+
   const { chains, provider, webSocketProvider } = configureChains(
     [
       chain.mainnet,
@@ -85,7 +90,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             >
               <div className="h-screen bg-body">
                 <div className="w-[90vw] max-w-[1536px] mx-auto pb-24 md:text-body-1">
-                  <Navbar />
+                  {currentRoute === "/" ? <Navbar /> : <NavbarApp />}
                   <Component {...pageProps} />
                   <footer></footer>
                 </div>

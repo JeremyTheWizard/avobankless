@@ -17,7 +17,6 @@ const Navbar: React.FC = () => {
             />
           </div>
         </LINK>
-        {/* <ScoreButton text="Connect Wallet" onClick={() => {}} /> */}
         <ConnectButton1 />
       </nav>
     );

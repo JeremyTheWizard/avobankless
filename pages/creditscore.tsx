@@ -1,5 +1,6 @@
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import Tabs from "../components/credit-score/BasicTabs";
 import GradientBorder from "../components/general/GradientBorder";
@@ -9,8 +10,46 @@ import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 
 const CreditScore: React.FC = () => {
-  const { isDisconnected } = useAccount();
-  const [score, setScore] = useState();
+  const { isDisconnected, isConnected, address } = useAccount();
+  const [creditScore, setCreditScore] = useState();
+
+  useEffect(() => {
+    if (isConnected) {
+      const updateExistingWalletScore = async () => {
+        const walletScore = await getExistingWalletScore();
+        if (walletScore) {
+          setCreditScore(walletScore);
+        }
+      };
+      updateExistingWalletScore();
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (isDisconnected) {
+      setCreditScore(undefined);
+    }
+  }, [isDisconnected]);
+
+  const getExistingWalletScore = async () => {
+    let response;
+    try {
+      response = await axios.get(`api/creditscore/${address}`);
+    } catch (err) {
+      console.log(err);
+    }
+    return response?.data.score;
+  };
+
+  const calculateWalletScore = async () => {
+    let response;
+    try {
+      response = await axios.post(`api/creditscore/${address}`);
+    } catch (err) {
+      console.log(err);
+    }
+    setCreditScore(response?.data.score);
+  };
 
   return (
     <div className="space-y-md">
@@ -41,7 +80,9 @@ const CreditScore: React.FC = () => {
               </Typography>
             </div>
             <div className=" flex flex-col items-center">
-              <GradientCircularGaugeIndicator />
+              <GradientCircularGaugeIndicator
+                score={creditScore ? creditScore : 0}
+              />
               <div className="flex gap-sm text-xs">
                 <div className="flex gap-xs items-center">
                   <div className="w-4 aspect-square rounded-full bg-red-500"></div>{" "}
@@ -83,16 +124,17 @@ const CreditScore: React.FC = () => {
                 text="Calculate Score"
                 disabled={isDisconnected && true}
                 tooltip={isDisconnected ? "Connect your wallet first" : ""}
+                onClick={() => calculateWalletScore()}
               />
               <SlideDeckButton
                 size="md"
                 text="Verify"
-                disabled={(isDisconnected || !score) && true}
+                disabled={(isDisconnected || !creditScore) && true}
                 tooltip={
                   isDisconnected
                     ? "Connect your wallet first"
-                    : !score
-                    ? "Calculate your score first"
+                    : !creditScore
+                    ? "Calculate your creditScore first"
                     : ""
                 }
               />
@@ -129,7 +171,9 @@ const CreditScore: React.FC = () => {
               <Typography variant="h6" component="span">
                 Loans
               </Typography>
-              <Typography className="font-bold">$0</Typography>
+              <Typography variant="h6" component="span" className="font-bold">
+                $0
+              </Typography>
             </div>
           </GradientBox>
           <div className="relative h-full">
