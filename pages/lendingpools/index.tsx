@@ -2,8 +2,10 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+import Deposit from "../../components/deposit/Deposit";
 import GradientBorder from "../../components/general/GradientBorder";
 import SearchBar from "../../components/general/SearchBar";
+import ScoreButton from "../../components/navbar/buttons/ScoreButton";
 import coin from "../../public/coin.png";
 import dai from "../../public/dai.png";
 import { processCreditScore } from "../../utils/processRawCreditScore";
@@ -12,6 +14,7 @@ const LendingPools: NextPage = () => {
   const [lendersCount, setLendersCount] = useState(0);
   const [TVL, setTVL] = useState(0);
   const [lendingPools, setLendingPools] = useState<Array<JSX.Element>>([]);
+  const [openBorrow, setOpenBorrow] = useState(false);
 
   useEffect(() => {
     const getLendingPools = async () => {
@@ -37,12 +40,10 @@ const LendingPools: NextPage = () => {
           creditScoreColor = "#22c55e";
         }
         styledLendingPools.push(
-          <div
-            key={i}
-            className="flex gap-md w-full justify-evenly items-center"
-          >
-            <div className="flex gap-sm items-center">
+          <>
+            <div className="flex gap-xs items-center">
               <img src={dai.src} alt="dai" />
+              <Typography>DAI</Typography>
             </div>
             <Typography>${lendingPools[i].deposit}k</Typography>
             <Typography>{lendingPools[i].TVL}k</Typography>
@@ -53,7 +54,12 @@ const LendingPools: NextPage = () => {
             <Typography color={creditScoreColor}>
               {lendingPools[i].creditScore}
             </Typography>
-          </div>
+            <ScoreButton
+              text="Deposit"
+              twProps={"px-6"}
+              onClick={() => setOpenBorrow(true)}
+            />
+          </>
         );
         setLendingPools(styledLendingPools);
       }
@@ -62,84 +68,88 @@ const LendingPools: NextPage = () => {
   }, []);
 
   return (
-    <GradientBorder>
-      <div className="flex gap-sm w-full">
-        <div className="flex md:gap-md gap-sm items-center justify-evenly w-full">
-          <div className="flex gap-xs items-center ">
-            <img src={coin.src} alt="coin" />
-            <Typography variant="h6" component="h4" className="font-bold">
-              Lending Pools
+    <>
+      <GradientBorder>
+        <div className="flex gap-sm w-full">
+          <div className="flex md:gap-md gap-sm items-center justify-evenly w-full">
+            <div className="flex gap-xs items-center ">
+              <img src={coin.src} alt="coin" />
+              <Typography variant="h6" component="h4" className="font-bold">
+                Lending Pools
+              </Typography>
+            </div>
+            <SearchBar placeholder="Search by ENS or address..." size="lg" />
+            <Typography variant="h6" component="span" className="font-bold ">
+              {lendersCount} lenders
+            </Typography>
+            <Typography variant="h6" component="span" className="font-bold ">
+              TVL: ${TVL}
             </Typography>
           </div>
-          <SearchBar placeholder="Search by ENS or address..." size="lg" />
-          <Typography variant="h6" component="span" className="font-bold ">
-            {lendersCount} lenders
-          </Typography>
-          <Typography variant="h6" component="span" className="font-bold ">
-            TVL: ${TVL}
-          </Typography>
         </div>
-      </div>
-      <div className="div flex gap-md justify-evenly w-full">
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          Asset
-        </Typography>
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          Deposit
-        </Typography>
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          TVL
-        </Typography>
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          Borrowed
-        </Typography>
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          Active APY
-        </Typography>
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          Reward APY
-        </Typography>
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          Yearn APY
-        </Typography>
-        <Typography
-          variant="h6"
-          component="span"
-          className="text-darkGreen capitalize"
-        >
-          CS
-        </Typography>
-      </div>
-      {lendingPools && lendingPools}
-    </GradientBorder>
+        <div className="grid grid-cols-9 items-center justify-items-center w-full space-y-sm">
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize self-end"
+          >
+            Asset
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize"
+          >
+            Deposit
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize"
+          >
+            TVL
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize"
+          >
+            Borrowed
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize"
+          >
+            Active APY
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize"
+          >
+            Reward APY
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize"
+          >
+            Yearn APY
+          </Typography>
+          <Typography
+            variant="h6"
+            component="span"
+            className="text-darkGreen capitalize"
+          >
+            CS
+          </Typography>
+          <div></div>
+          {lendingPools && lendingPools}
+        </div>
+      </GradientBorder>
+      <Deposit openBorrow={openBorrow} setOpenBorrow={setOpenBorrow} />
+    </>
   );
 };
 

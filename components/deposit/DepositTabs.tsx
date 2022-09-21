@@ -4,8 +4,9 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import * as React from "react";
 import { useState } from "react";
-import WithdrawAmountInput from "../general/InputAmountWithMaximum";
+import InputAmountWithMaximum from "../general/InputAmountWithMaximum";
 import ScoreButton from "../navbar/buttons/ScoreButton";
+import SelectInterestRangeInput from "./SelectInterestRate";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,8 +39,7 @@ function a11yProps(index: number) {
 
 export default function WithdrawTabs({}) {
   const [value, setValue] = useState(0);
-  const [earned, setEarned] = useState(0);
-  const [available, setAvailable] = useState(0);
+  const [yieldProjection, setYieldProjection] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -62,57 +62,23 @@ export default function WithdrawTabs({}) {
             label="Liquidity Providers"
             {...a11yProps(0)}
           />
-          <Tab
-            className="text-lg font-extrabold text-black"
-            label="Repayment pool"
-            {...a11yProps(1)}
-          />
         </Tabs>
       </Box>
 
       <TabPanel value={value} index={0}>
         <div className="space-y-md w-full">
-          <WithdrawAmountInput />
+          <InputAmountWithMaximum placeholder="Amount to deposit" />
+          <SelectInterestRangeInput />
         </div>
         <div className="flex justify-between w-full">
           <Typography variant="h6" component="span" className="font-bold">
-            Earned
+            Yield Projection
           </Typography>
           <Typography variant="h6" component="span" className="font-bold">
-            {earned}
+            {yieldProjection}
           </Typography>
         </div>
-        <div className="flex justify-between w-full">
-          <Typography variant="h6" component="span" className="font-bold">
-            Available
-          </Typography>
-          <Typography variant="h6" component="span" className="font-bold">
-            {available}
-          </Typography>
-        </div>
-        <ScoreButton text="Withdraw" twProps="!w-full mt-md" />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <div className="space-y-md w-full">
-          <WithdrawAmountInput />
-        </div>
-        <div className="flex justify-between w-full">
-          <Typography variant="h6" component="span" className="font-bold">
-            Earned
-          </Typography>
-          <Typography variant="h6" component="span" className="font-bold">
-            {earned}
-          </Typography>
-        </div>
-        <div className="flex justify-between w-full">
-          <Typography variant="h6" component="span" className="font-bold">
-            Available
-          </Typography>
-          <Typography variant="h6" component="span" className="font-bold">
-            {available}
-          </Typography>
-        </div>
-        <ScoreButton text="Withdraw" twProps="!w-full mt-md" />
+        <ScoreButton text="Create" twProps="!w-full mt-md" />
       </TabPanel>
     </Box>
   );

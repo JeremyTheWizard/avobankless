@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const GradientCircularGaugeIndicator = ({ score }) => {
-  const [rawCreditScore, setRawCreditScore] = useState(0);
   const [seriesRadial, setSeriesRadial] = useState([1]);
 
   useEffect(() => {
+    console.log(score);
     const creditScore = processCreditScore(score);
     setSeriesRadial([creditScore ? creditScore : 1]);
     if (score) {
+      console.log("🚀 ~ score", score);
       setOptionsRadial({
         plotOptions: {
           radialBar: {

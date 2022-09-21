@@ -28,9 +28,7 @@ const ScoreButton: React.FC<Props> = ({
         <button
           disabled={disabled}
           onClick={onClick}
-          className={`w-max ${
-            size == "md" && "min-w-[183px]"
-          } border-2 border-almostBlack px-18 py-3 rounded-100 bg-object text-almostWhite  ${twProps} ${
+          className={`w-max border-2 border-almostBlack px-12 py-3 rounded-100 bg-object text-almostWhite  ${twProps} ${
             disabled
               ? "opacity-50 cursor-not-allowed pointer-events-none"
               : "cursor-pointer"

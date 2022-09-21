@@ -4,8 +4,8 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import * as React from "react";
 import { useState } from "react";
+import WithdrawAmountInput from "../general/InputAmountWithMaximum";
 import ScoreButton from "../navbar/buttons/ScoreButton";
-import WithdrawAmountInput from "./WithdrawAmountInput";
 
 interface TabPanelProps {
   children?: React.ReactNode;

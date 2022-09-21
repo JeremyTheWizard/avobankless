@@ -68,7 +68,7 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
       <SearchIconWrapper>{DAI}</SearchIconWrapper>
       <StyledInputBase
         className="w-full"
-        placeholder={"0.00"}
+        placeholder={placeholder ? placeholder : "0.00"}
         inputProps={{ "aria-label": "search" }}
         type="number"
       />

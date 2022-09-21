@@ -2,6 +2,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  SelectChangeEvent,
   Theme,
   useTheme,
 } from "@mui/material";
@@ -24,10 +25,24 @@ const MenuProps = {
   },
 };
 
-const options = ["Interest Range: 2% - 15%"];
+const options = [
+  "2%",
+  "3%",
+  "4%",
+  "5%",
+  "6%",
+  "7%",
+  "8%",
+  "9%",
+  "10%",
+  "11%",
+  "12%",
+  "13%",
+  "14%",
+];
 
 const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
-  const [personName, setPersonName] = React.useState<string[]>([options[0]]);
+  const [personName, setPersonName] = React.useState<string[]>([]);
   const theme = useTheme();
 
   function getStyles(
@@ -61,17 +76,31 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
     },
   }));
 
+  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
   return (
     <>
       <div className="shadow-equal rounded-2xl">
         <Select
+          onChange={handleChange}
           sx={{ width: "100%", borderRadius: "1rem" }}
           value={personName}
           displayEmpty
           input={<StyledInputBase />}
+          placeholder={"Select Interest Rate"}
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <em>Placeholder</em>;
+              return (
+                <em className="text-gray-400">Select your interest rate</em>
+              );
             }
             return selected.join(", ");
           }}
