@@ -37,7 +37,10 @@ const LendingPools: NextPage = () => {
           creditScoreColor = "#22c55e";
         }
         styledLendingPools.push(
-          <div className="flex gap-md w-full justify-evenly items-center">
+          <div
+            key={i}
+            className="flex gap-md w-full justify-evenly items-center"
+          >
             <div className="flex gap-sm items-center">
               <img src={dai.src} alt="dai" />
             </div>

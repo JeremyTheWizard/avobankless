@@ -1,4 +1,4 @@
-import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import {
   AvatarComponent,
   getDefaultWallets,
@@ -82,25 +82,23 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={MaterialTheme}>
-      <StyledEngineProvider injectFirst>
-        <Provider store={store}>
-          <WagmiConfig client={wagmiClient}>
-            <RainbowKitProvider
-              chains={chains}
-              theme={RainbowKitTheme}
-              avatar={CustomAvatar}
-            >
-              <div className="h-screen bg-body">
-                <div className="w-[90vw] max-w-[1536px] mx-auto pb-24 md:text-body-1">
-                  {currentRoute === "/" ? <Navbar /> : <NavbarApp />}
-                  <Component {...pageProps} />
-                  <footer></footer>
-                </div>
+      <Provider store={store}>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider
+            chains={chains}
+            theme={RainbowKitTheme}
+            avatar={CustomAvatar}
+          >
+            <div className="h-screen bg-body">
+              <div className="w-[90vw] max-w-[1536px] mx-auto pb-24 md:text-body-1">
+                {currentRoute === "/" ? <Navbar /> : <NavbarApp />}
+                <Component {...pageProps} />
+                <footer></footer>
               </div>
-            </RainbowKitProvider>
-          </WagmiConfig>
-        </Provider>
-      </StyledEngineProvider>
+            </div>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </Provider>
     </ThemeProvider>
   );
 }

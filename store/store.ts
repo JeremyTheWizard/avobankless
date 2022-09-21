@@ -4,10 +4,12 @@ import {
   useSelector as useSelectorBase,
 } from "react-redux";
 import creditScoreDialogSlice from "../slices/creditScoreDialogSlice";
+import withdrawSlice from "../slices/withdrawSlice";
 
 export const store = configureStore({
   reducer: {
     creditScoreDialog: creditScoreDialogSlice,
+    withdrawSlice: withdrawSlice,
   },
 });
 
