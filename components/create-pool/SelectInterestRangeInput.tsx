@@ -11,6 +11,7 @@ import React, { FC } from "react";
 type Props = {
   placeholder?: string;
   size?: "sm" | "md" | "lg";
+  options?: string[];
 };
 
 const ITEM_HEIGHT = 48;
@@ -24,9 +25,11 @@ const MenuProps = {
   },
 };
 
-const options = ["Interest Range: 2% - 15%"];
-
-const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
+const WithdrawAmountInput: FC<Props> = ({
+  placeholder,
+  size = "md",
+  options = ["Interest Range: 2% - 15%"],
+}) => {
   const [personName, setPersonName] = React.useState<string[]>([options[0]]);
   const theme = useTheme();
 

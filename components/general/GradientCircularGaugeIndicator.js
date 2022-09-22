@@ -8,9 +8,10 @@ const GradientCircularGaugeIndicator = ({ score }) => {
   useEffect(() => {
     console.log(score);
     const creditScore = processCreditScore(score);
+    console.log("🚀 ~ score", score);
+    console.log("🚀 ~ creditScore", creditScore);
     setSeriesRadial([creditScore ? creditScore : 1]);
     if (score) {
-      console.log("🚀 ~ score", score);
       setOptionsRadial({
         plotOptions: {
           radialBar: {
@@ -54,8 +55,8 @@ const GradientCircularGaugeIndicator = ({ score }) => {
                 fontSize: "24px",
               },
               value: {
-                formatter: function () {
-                  return `${score}/850`;
+                formatter: function (creditScore) {
+                  return `${Math.floor((creditScore * 850) / 100)}/850`;
                 },
                 color: "#110F2D",
                 fontSize: "34px",

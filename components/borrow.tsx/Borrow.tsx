@@ -1,18 +1,28 @@
 import Backdrop from "@mui/material/Backdrop";
+import {
+  closeBorrow,
+  getBorrowState,
+  openBorrow,
+} from "../../slices/borrowSlice";
+import { useDispatch, useSelector } from "../../store/store";
 import CloseCircle from "../general/CloseCircle";
-import DepositTabs from "./DepositTabs";
+import BorrowTabs from "./BorrowTabs";
 
-type Props = {
-  openBorrow: boolean;
-  setOpenBorrow: (open: boolean) => void;
-};
+type Props = {};
 
-const Deposit: React.FC<Props> = ({ openBorrow, setOpenBorrow }) => {
+const Borrow: React.FC<Props> = ({}) => {
+  const dispatch = useDispatch();
+  const borrow = useSelector(getBorrowState);
+
   const handleClose = () => {
-    setOpenBorrow(false);
+    dispatch(closeBorrow());
   };
   const handleToggle = () => {
-    setOpenBorrow(!openBorrow);
+    if (borrow.borrow === false) {
+      dispatch(openBorrow());
+    } else {
+      dispatch(closeBorrow());
+    }
   };
 
   const stopPropagation = (e: any) => {
@@ -28,14 +38,14 @@ const Deposit: React.FC<Props> = ({ openBorrow, setOpenBorrow }) => {
           backgroundColor: "rgba(0,0,0,0.1)",
           backdropFilter: "blur(40px)",
         }}
-        open={openBorrow}
+        open={borrow.borrow}
         onClick={handleClose}
       >
         <div
           onClick={(e) => stopPropagation(e)}
           className="space-y-lg w-full max-w-4xl flex flex-col items-center p-md"
         >
-          <DepositTabs />
+          <BorrowTabs />
         </div>
         <CloseCircle />
       </Backdrop>
@@ -43,4 +53,4 @@ const Deposit: React.FC<Props> = ({ openBorrow, setOpenBorrow }) => {
   );
 };
 
-export default Deposit;
+export default Borrow;

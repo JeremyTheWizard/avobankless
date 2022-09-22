@@ -1,7 +1,7 @@
-import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import Borrow from "../components/borrow.tsx/Borrow";
 import CreatePool from "../components/create-pool/CreatePool";
 import Tabs from "../components/credit-score/BasicTabs";
 import GradientBorder from "../components/general/GradientBorder";
@@ -15,21 +15,21 @@ import { useSelector } from "../store/store";
 
 const CreditScore: React.FC = () => {
   const { isDisconnected, address } = useAccount();
-  const [creditScore, setCreditScore] = useState();
+  const [creditScore, setCreditScore] = useState<Number | undefined>();
   const [openCreatePool, setOpenCreatePool] = useState(false);
   const { withdraw } = useSelector(getWithdrawState);
 
   const updateExistingWalletScore = useCallback(async () => {
     if (address) {
-      let response;
+      let score;
       try {
-        response = await axios.get(`api/creditscore/${address}`);
+        score = await axios
+          .get(`api/creditscore/${address}`)
+          .then((res) => res.data.score);
       } catch (err) {
         console.log(err);
       }
-      if (response?.data.score) {
-        setCreditScore(response.data.score);
-      }
+      setCreditScore(score);
     }
   }, [address]);
 
@@ -44,155 +44,187 @@ const CreditScore: React.FC = () => {
   }, [isDisconnected]);
 
   const calculateWalletScore = async () => {
-    let response;
+    let score;
     try {
-      response = await axios.post(`api/creditscore/${address}`);
+      score = await axios
+        .post(`api/creditscore/${address}`)
+        .then((res) => res.data.score);
     } catch (err) {
       console.log(err);
     }
-    setCreditScore(response?.data.score);
+    if (typeof score === "number") {
+      console.log("score", score);
+      setCreditScore(score);
+    }
   };
 
   return (
     <>
-      <div className="space-y-md">
-        <div className="flex gap-md">
-          <div className="space-y-md 2xl:shrink-0">
-            <div className="space-y-xs">
-              <Typography variant="h3" className="text-darkishRed">
-                Generate Your Score {""}
-                <span className="bg-object bg-clip-text text-transparent capitalize">
-                  Guacamole
-                </span>
-              </Typography>
-              <Typography variant="h6" component="p">
-                Connect wallet for Check History, DeFi activity and Social Graph
-              </Typography>
+      <div className="space-y-md overflow-hidden">
+        <div className="lg:hidden">
+          <h3 className="text-darkishRed text-3xl sm:text-4xl md:text-5xl text-center">
+            Generate Your Score {""}
+            <span className="font-bold bg-object bg-clip-text text-transparent capitalize">
+              Guacamole!
+            </span>
+          </h3>
+          <p className="text-center">
+            Connect wallet for Check History, DeFi activity and Social Graph
+          </p>
+        </div>
+        <div className="flex lg:hidden w-full flex-col gap-md col-span-6">
+          <GradientBox twProps="prose-h5:m-0 ">
+            <div className="flex flex-col gap-sm">
+              <h5>Balance</h5>
+              <h5 className="font-bold">$0</h5>
             </div>
-            <GradientBorder twPropsChild="!space-y-lg">
-              <div className="flex flex-col items-center gap-xs">
-                <Typography
-                  variant="h4"
-                  component="h3"
-                  className="font-semibold shrink-0"
-                >
-                  🥑Avo Score
-                </Typography>
-                <Typography variant="h6" component="span">
-                  Multi Asset Credit Risk Oracle on-chain.
-                </Typography>
-              </div>
-              <div className="flex flex-col items-center">
-                <GradientCircularGaugeIndicator
-                  score={creditScore ? creditScore : 0}
-                />
-                <div className="flex gap-sm text-xs">
-                  <div className="flex gap-xs items-center">
-                    <div className="w-4 aspect-square rounded-full bg-red-500"></div>{" "}
-                    <Typography variant="caption">
-                      Beginner
-                      <br />
-                      (+ 0)
-                    </Typography>
-                  </div>
-                  <div className="flex gap-xs items-center">
-                    <div className="w-4 aspect-square rounded-full bg-yellow-400"></div>{" "}
-                    <Typography variant="caption">
-                      Learning
-                      <br />
-                      (+ 212)
-                    </Typography>
-                  </div>
-                  <div className="flex gap-xs items-center">
-                    <div className="w-4 aspect-square rounded-full bg-blue-400"></div>{" "}
-                    <Typography variant="caption">
-                      Grow
-                      <br />
-                      (+ 425)
-                    </Typography>
-                  </div>
-                  <div className="flex gap-xs items-center">
-                    <div className="w-4 aspect-square rounded-full bg-green-400"></div>{" "}
-                    <Typography variant="caption">
-                      Stable
-                      <br />
-                      (+ 637)
-                    </Typography>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-md self-center pb-md">
-                <ScoreButton
-                  size="md"
-                  text="Calculate Score"
-                  disabled={isDisconnected && true}
-                  tooltip={isDisconnected ? "Connect your wallet first" : ""}
-                  onClick={() => calculateWalletScore()}
-                />
-                <SlideDeckButton
-                  size="md"
-                  text="Verify"
-                  disabled={(isDisconnected || !creditScore) && true}
-                  tooltip={
-                    isDisconnected
-                      ? "Connect your wallet first"
-                      : !creditScore
-                      ? "Calculate your creditScore first"
-                      : ""
-                  }
-                />
-              </div>
-            </GradientBorder>
-          </div>
-          <div className="w-full flex flex-col gap-md basis-7/12">
-            <GradientBox>
-              <div className="flex flex-col gap-sm">
-                <Typography variant="h6" component="span">
-                  Balance
-                </Typography>
-                <Typography variant="h6" component="span" className="font-bold">
-                  $0
-                </Typography>
-              </div>
-              <div className="flex flex-col gap-sm">
-                <Typography variant="h6" component="span">
-                  Deposits
-                </Typography>
-                <Typography variant="h6" component="span" className="font-bold">
-                  $0
-                </Typography>
-              </div>
-              <div className="flex flex-col gap-sm">
-                <Typography variant="h6" component="span">
-                  Borrowed
-                </Typography>
-                <Typography variant="h6" component="span" className="font-bold">
-                  $0
-                </Typography>
-              </div>
-              <div className="flex flex-col gap-sm">
-                <Typography variant="h6" component="span">
-                  Loans
-                </Typography>
-                <Typography variant="h6" component="span" className="font-bold">
-                  $0
-                </Typography>
-              </div>
-            </GradientBox>
+            <div className="flex flex-col gap-sm">
+              <h5>Deposits</h5>
+              <h5 className="font-bold">$0</h5>
+            </div>
+            <div className="flex flex-col gap-sm">
+              <h5>Borrowed</h5>
+              <h5 className="font-bold">$0</h5>
+            </div>
+            <div className="flex flex-col gap-sm">
+              <h5>Loans</h5>
+              <h5 className="font-bold">$0</h5>
+            </div>
+          </GradientBox>
+          <div className="w-11/12 mx-auto">
             <ScoreButton
               onClick={() => setOpenCreatePool(true)}
               text="Create Pool"
               twProps={"!w-full"}
             />
-            <div className="relative h-full">
+          </div>
+        </div>
+        <div className="grid lg:grid-cols-11 xl:gap-md gap-sm">
+          <div className="space-y-md w-full min-w-0 min-h-0 col-span-5">
+            <div className="hidden lg:block">
+              <h3 className="text-darkishRed md:text lg:text-3xl xl:text-4xl mt-0">
+                Generate Your Score {""}
+                <span className="font-bold bg-object bg-clip-text text-transparent capitalize">
+                  Guacamole!
+                </span>
+              </h3>
+              <p>
+                Connect wallet for Check History, DeFi activity and Social Graph
+              </p>
+            </div>
+            <GradientBorder twPropsChild="!lg:space-y-lg !space-y-md ">
+              <div className="flex flex-col items-center gap-xs">
+                <h3 className="font-bold">🥑Avo Score</h3>
+                <span>Multi Asset Credit Risk Oracle on-chain.</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <GradientCircularGaugeIndicator
+                  score={creditScore ? creditScore : 0}
+                />
+                <div className="flex xl:gap-md gap-sm text-xs">
+                  <div className="flex gap-xs items-center">
+                    <div className="w-4 aspect-square rounded-full bg-red-500"></div>{" "}
+                    <span>
+                      Beginner
+                      <br />
+                      (+ 0)
+                    </span>
+                  </div>
+                  <div className="flex gap-xs items-center">
+                    <div className="w-4 aspect-square rounded-full bg-yellow-400"></div>{" "}
+                    <span>
+                      Learning
+                      <br />
+                      (+ 212)
+                    </span>
+                  </div>
+                  <div className="flex gap-xs items-center">
+                    <div className="w-4 aspect-square rounded-full bg-blue-400"></div>{" "}
+                    <span>
+                      Grow
+                      <br />
+                      (+ 425)
+                    </span>
+                  </div>
+                  <div className="flex gap-xs items-center">
+                    <div className="w-4 aspect-square rounded-full bg-green-400"></div>{" "}
+                    <caption>
+                      Stable
+                      <br />
+                      (+ 637)
+                    </caption>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-md self-center pb-md w-full justify-center ">
+                <div className="w-full max-w-xs">
+                  <ScoreButton
+                    text="Calculate Score"
+                    disabled={isDisconnected && true}
+                    tooltip={isDisconnected ? "Connect your wallet first" : ""}
+                    onClick={() => calculateWalletScore()}
+                  />
+                </div>
+                <div className="w-full max-w-xs">
+                  <SlideDeckButton
+                    size="md"
+                    text="Verify"
+                    disabled={(isDisconnected || !creditScore) && true}
+                    tooltip={
+                      isDisconnected
+                        ? "Connect your wallet first"
+                        : !creditScore
+                        ? "Calculate your creditScore first"
+                        : ""
+                    }
+                  />
+                </div>
+              </div>
+            </GradientBorder>
+          </div>
+          <div className="hidden lg:flex w-full flex-col gap-md col-span-6">
+            <GradientBox twProps="prose-h5:m-0 ">
+              <div className="flex flex-col gap-sm">
+                <h5>Balance</h5>
+                <h5 className="font-bold">$0</h5>
+              </div>
+              <div className="flex flex-col gap-sm">
+                <h5>Deposits</h5>
+                <h5 className="font-bold">$0</h5>
+              </div>
+              <div className="flex flex-col gap-sm">
+                <h5>Borrowed</h5>
+                <h5 className="font-bold">$0</h5>
+              </div>
+              <div className="flex flex-col gap-sm">
+                <h5>Loans</h5>
+                <h5 className="font-bold">$0</h5>
+              </div>
+            </GradientBox>
+            <div className="w-11/12 mx-auto">
+              <ScoreButton
+                onClick={() => setOpenCreatePool(true)}
+                text="Create Pool"
+                twProps={"!w-full"}
+              />
+            </div>
+            <div className="h-full">
               <GradientBorder
-                twPropsParent={"h-full w-full absolute"}
-                twPropsChild={"overflow-y-scroll"}
+                twPropsParent={"h-full w-full "}
+                twPropsChild={"overflow-y-scroll !p-0 "}
               >
                 <Tabs />
               </GradientBorder>
             </div>
           </div>
+        </div>
+        <div className="lg:hidden h-full">
+          <GradientBorder
+            twPropsParent={"h-full w-full "}
+            twPropsChild={"overflow-y-scroll !items-start !p-0 "}
+          >
+            <Tabs />
+          </GradientBorder>
         </div>
       </div>
 
@@ -201,6 +233,7 @@ const CreditScore: React.FC = () => {
         setOpenCreatePool={setOpenCreatePool}
       />
       <Withdraw />
+      <Borrow />
     </>
   );
 };

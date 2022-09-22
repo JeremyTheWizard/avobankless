@@ -3,15 +3,19 @@ import Head from "next/head";
 import router from "next/router";
 import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
+import borrow from "../public/borrow.png";
+import cashMan from "../public/cashMan.jpeg";
+import creditScore from "../public/credit-score.png";
+import homepage from "../public/homepage.jpg";
+import lend from "../public/lend.png";
+import superfluid from "../public/superfluid.png";
 
-import Typography from "@mui/material/Typography";
-import { getDialogState } from "../slices/creditScoreDialogSlice";
-import { useSelector } from "../store/store";
+import Carousel from "../components/general/Carousel";
+import GradientBox from "../components/general/GradientBox";
 
 const Home: NextPage = () => {
-  const { overflow } = useSelector(getDialogState);
   return (
-    <div className={`${overflow}`}>
+    <div className="overflow-hidden">
       <Head>
         <title>avobankless</title>
         <meta
@@ -25,45 +29,111 @@ const Home: NextPage = () => {
         <meta name="theme-color" content="#000000" />
       </Head>
 
-      <main className="flex flex-col mx-auto">
-        <section className="flex justify-between items-center">
+      <main className="flex flex-col mx-auto space-y-xl ">
+        <section className="flex justify-evenly items-center">
           <div className="space-y-md">
-            <div className="space-y-sm">
-              <Typography
-                variant="h1"
-                className="text-darkishRed capitalize sm:whitespace-nowrap"
-              >
-                We Make Credit <br />
+            <div>
+              <h1 className="text-darkishRed capitalize sm:whitespace-nowrap  mb-0 text-3xl lg:text-4xl xl:text-6xl 2xl:text-7xl !leading-normal">
+                Crypto Loans{""}
+                <br />
+                without collateral <br />
                 <span className="bg-object bg-clip-text text-transparent">
-                  Possible For All
-                  <br />
+                  is now possible
                 </span>
-                New Generations
-              </Typography>
-              <Typography variant="h5" component="span">
-                The Decentralized Credit Bureau For The Unbanked.
-                <br /> Inclusive, Secure And Private.
-              </Typography>
+              </h1>
+              <p className="mt-4 max-w-xl ">
+                The decentralized credit Protocol that understands your crypto
+                income and DeFi activity.
+              </p>
             </div>
-            <div className="flex gap-6">
-              <ScoreButton
-                text="Launch App"
-                onClick={() => router.push("/creditscore")}
-              />
-              <SlideDeckButton text="Slide deck" />
+            <div className="flex gap-6 w-full">
+              <div className="w-full max-w-[250px]">
+                <ScoreButton
+                  text="Launch App"
+                  onClick={() => router.push("/creditscore")}
+                />
+              </div>
+              <div className="w-full max-w-[250px]">
+                <SlideDeckButton text="Slide deck" />
+              </div>
             </div>
           </div>
-          <img
-            src="/homepage-gif.png"
-            alt="representation of the protocol"
-            className="object-scale-down"
-          />
+          <div className="hidden md:block">
+            <img
+              src={homepage.src}
+              alt="representation of the protocol"
+              className="w-full object-fit"
+            />
+          </div>
         </section>
-        <section className="mt-lg text-display-6 flex justify-center ">
-          <Typography variant="h4" component="h2">
-            How it works?
-          </Typography>
+        <section className="hidden lg:flex justify-center gap-md prose-img:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite ">
+          <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
+            <img
+              src={borrow.src}
+              alt="Hand holding coin"
+              className="w-40 h-40"
+            />
+            <h2>Borrowing any time</h2>
+            <p>
+              Receive competitive Lending Rates in a crypto credit line in the
+              form of a liquidity pool where you can withdraw at any time.
+            </p>
+            <img
+              src={superfluid.src}
+              alt="superfluid stream of money"
+              className="w-32 h-32 absolute -right-20 "
+            />
+          </GradientBox>
+          <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
+            <img src={lend.src} alt="hand giving cash" className="w-40 h-40" />
+            <h2>Lend with Autopay</h2>
+            <p>
+              Take advantage of payment streams to automatically amortize loans
+              with consistent returns, always with liquidity.
+            </p>
+            <img
+              src={superfluid.src}
+              alt="superfluid stream of money"
+              className="w-32 h-32 absolute -right-20 "
+            />
+          </GradientBox>
+          <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
+            <img src={creditScore.src} alt="eth badge" className="w-40 h-40" />
+            <h2>NFT Credit Score</h2>
+            <p>
+              Connect your history DeFi on-chain into a single composable asset
+              and develop your borrower profile.
+            </p>
+          </GradientBox>
         </section>
+        <div className="lg:hidden self-center">
+          <Carousel />
+        </div>
+        <div className="grid md:grid-cols-2 xl:gap-0 gap-md ">
+          <div className="w-full order-1 md:order-0 mx-auto">
+            <img
+              src={cashMan.src}
+              alt="Man setting in pile of eth"
+              className="w-full max-w-2xl "
+            />
+          </div>
+          <div className="space-y-sm order-0 md:order-1">
+            <h2 className="text-darkishRed capitalize  mb-0  text-3xl lg:text-4xl xl:text-6xl 2xl:text-7xl !leading-normal mt-0">
+              Capital efficiency and{" "}
+              <span className="bg-object bg-clip-text text-transparent">
+                Competitive Returns
+              </span>
+            </h2>
+            <p>
+              Uncollateralized lending provides an opportunity for lenders to
+              earn higher long-term returns than secured lending, and for
+              borrowers to maximize their capital efficiency.
+            </p>
+          </div>
+        </div>
+        <span className="text-center text-sm !mt-16">
+          Making DeFi guacamole on 🥑 ETH Global
+        </span>
       </main>
     </div>
   );

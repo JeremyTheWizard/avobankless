@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import dai from "../../public/dai.png";
+import { openBorrow } from "../../slices/borrowSlice";
 import { getWithdrawState, openWithdraw } from "../../slices/withdrawSlice";
 import { Deposits, Loans } from "../../utils/types";
 import SlideDeckButton from "../navbar/buttons/SlideDeckButton";
@@ -28,8 +29,13 @@ function TabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
+      className="h-full"
     >
-      {value === index && <div className="pt-sm">{children}</div>}
+      {value === index && (
+        <div className="flex flex-col h-full overflow-x-hidden gap-sm pt-sm">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -45,6 +51,7 @@ export default function BasicTabs({}) {
   const [value, setValue] = useState(0);
   const { address } = useAccount();
   const [deposits, setDeposits] = useState<Array<JSX.Element>>([]);
+  const [loansInfo, setLoansInfo] = useState<Loans>([]);
   const [loans, setLoans] = useState<Array<JSX.Element>>([]);
   const { withdraw } = useSelector(getWithdrawState);
 
@@ -73,15 +80,15 @@ export default function BasicTabs({}) {
             <>
               <div
                 key={i}
-                className="grid grid-cols-5 justify-items-center items-center"
+                className="grid grid-cols-5 justify-items-center items-center "
               >
                 <div className="flex gap-xs items-center">
-                  <img src={dai.src} alt="dai" />
+                  <img src={dai.src} alt="dai" className="m-0" />
                   <Typography>DAI</Typography>
                 </div>
-                <Typography>${deposits[i].deposited}K</Typography>
-                <Typography>${deposits[i].earned}K</Typography>
-                <Typography>${deposits[i].available}K</Typography>
+                <span className="text-base">${deposits[i].deposited}K</span>
+                <span className="text-base">${deposits[i].earned}K</span>
+                <span className="text-base">${deposits[i].available}K</span>
                 <SlideDeckButton
                   onClick={() => dispatch(openWithdraw())}
                   text="Withdraw"
@@ -112,21 +119,20 @@ export default function BasicTabs({}) {
       }
       const styledLoans = [];
       if (loans) {
+        setLoansInfo(loans);
         for (let i = 0; i < loans.length; i++) {
           styledLoans.push(
             <>
               <div
                 key={i}
-                className="grid grid-cols-5 justify-items-center items-center"
+                className="grid grid-cols-3 justify-items-center items-center"
               >
                 <div className="flex gap-xs items-center">
-                  <img src={dai.src} alt="dai" />
-                  <Typography>DAI</Typography>
+                  <img src={dai.src} alt="dai" className="m-0" />
+                  <span className="text-base">DAI</span>
                 </div>
-                <Typography>{loans[i].avgInterest}</Typography>
-                <Typography>{loans[i].borrowed}</Typography>
-                <Typography>{loans[i].endsOn}</Typography>
-                <Typography>{loans[i].flowRate}</Typography>
+                <span className="text-base">{loans[i].avgInterest}</span>
+                <span className="text-base">{loans[i].borrowed}</span>
               </div>
             </>
           );
@@ -138,13 +144,22 @@ export default function BasicTabs({}) {
   }, [address]);
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        paddingTop: "1.5rem",
+      }}
+    >
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
           sx={{
+            padding: "0px 1.5rem",
             "& .MuiTabs-flexContainer": { justifyContent: "space-evenly" },
           }}
           variant="fullWidth"
@@ -163,41 +178,49 @@ export default function BasicTabs({}) {
       </Box>
 
       <TabPanel value={value} index={0}>
-        <div className="capitalize grid grid-cols-5 justify-items-center pb-sm">
-          <Typography className="font-semibold text-darkGreen">
-            Assets
-          </Typography>
-          <Typography className="font-semibold text-darkGreen">
-            Earned
-          </Typography>
-          <Typography className="font-semibold text-darkGreen">
-            Deposited
-          </Typography>
-          <Typography className="font-semibold text-darkGreen">
-            Available
-          </Typography>
+        <div className="capitalize grid grid-cols-5 justify-items-center ">
+          <h6 className="text-base font-semibold text-darkGreen">Assets</h6>
+          <h6 className="text-base font-semibold text-darkGreen">Earned</h6>
+          <h6 className="text-base font-semibold text-darkGreen">Deposited</h6>
+          <h6 className="text-base font-semibold text-darkGreen">Available</h6>
         </div>
-        {deposits && deposits}
+        <div className="mb-md">{deposits && deposits}</div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <div className="capitalize grid grid-cols-5 justify-items-center pb-sm">
-          <Typography className="font-semibold text-darkGreen">
-            Asset
-          </Typography>
-          <Typography className="font-semibold text-darkGreen">
-            Avg. Interest
-          </Typography>
-          <Typography className="font-semibold text-darkGreen">
-            Borrowed
-          </Typography>
-          <Typography className="font-semibold text-darkGreen">
-            Ends On
-          </Typography>
-          <Typography className="font-semibold text-darkGreen">
-            Autopay
-          </Typography>
+        <div>
+          <div className="mb-14 lg:mb-0 space-y-sm">
+            <div className="capitalize grid grid-cols-3 justify-items-center">
+              <h6 className="text-base  text-darkGreen">Asset</h6>
+              <h6 className="text-base text-darkGreen">Avg. Interest</h6>
+              <h6 className="text-base text-darkGreen">Borrowed</h6>
+            </div>
+            {loans && loans}
+          </div>
         </div>
-        {loans && loans}
+        <div className="w-full max-w-[250px] my-auto self-center">
+          <SlideDeckButton
+            text="Borrow"
+            onClick={() => dispatch(openBorrow())}
+          />
+        </div>
+        <div className="bg-objectDown flex flex-col mt-auto gap-sm py-6">
+          <div className="grid grid-cols-2 text-center w-full gap-sm ">
+            <h6 className="m-0 text-base font-semibold text-almostWhite">
+              Ends On
+            </h6>
+            <h6 className="m-0 text-base font-semibold text-almostWhite">
+              Autopay
+            </h6>
+          </div>
+          <div className="grid grid-cols-2 text-center w-full">
+            <span className="m-0 text-base text-almostWhite">
+              {loansInfo[0]?.endsOn}
+            </span>
+            <span className="m-0 text-base text-almostWhite">
+              {loansInfo[0]?.flowRate}
+            </span>
+          </div>
+        </div>
       </TabPanel>
     </Box>
   );

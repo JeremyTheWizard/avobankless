@@ -3,6 +3,7 @@ import {
   useDispatch as useDispatchBase,
   useSelector as useSelectorBase,
 } from "react-redux";
+import borrowSlice from "../slices/borrowSlice";
 import creditScoreDialogSlice from "../slices/creditScoreDialogSlice";
 import withdrawSlice from "../slices/withdrawSlice";
 
@@ -10,6 +11,7 @@ export const store = configureStore({
   reducer: {
     creditScoreDialog: creditScoreDialogSlice,
     withdrawSlice: withdrawSlice,
+    borrowSlice: borrowSlice,
   },
 });
 

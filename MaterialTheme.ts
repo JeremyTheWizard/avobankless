@@ -64,5 +64,5 @@ export const MaterialTheme = responsiveFontSizes(theme, {
     "lg",
     "xl",
   ],
-  factor: 4,
+  factor: 8,
 });

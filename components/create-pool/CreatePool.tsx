@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import CloseCircle from "../general/CloseCircle";
 import CreatePoolTabs from "./CreatePoolTabs";
@@ -34,11 +33,8 @@ const CreatePool: React.FC<Props> = ({ openCreatePool, setOpenCreatePool }) => {
       >
         <div
           onClick={(e) => stopPropagation(e)}
-          className="space-y-lg w-full max-w-4xl flex flex-col items-center"
+          className="space-y-lg w-full max-w-4xl flex flex-col items-center p-md"
         >
-          <Typography variant="h5" className="font-bold">
-            CREATE YOUR POOL
-          </Typography>
           <CreatePoolTabs />
         </div>
         <CloseCircle />

@@ -16,7 +16,7 @@ const GradientBorder: React.FC<Props> = ({
   return (
     <div
       onClick={onClick}
-      className={`rounded-xl bg-object p-0.5 ${twPropsParent}`}
+      className={`rounded-xl bg-object border-box p-0.5 ${twPropsParent}`}
     >
       <div
         className={`h-full bg-body rounded-xl p-sm space-y-md flex flex-col items-center ${twPropsChild}`}

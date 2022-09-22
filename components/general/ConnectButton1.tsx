@@ -50,11 +50,9 @@ export const ConnectButton1 = () => {
                 );
               }
               return (
-                <div style={{ display: "flex", gap: 12 }}>
-                  <ScoreButton onClick={openAccountModal}>
-                    {account.displayName}
-                  </ScoreButton>
-                </div>
+                <ScoreButton onClick={openAccountModal}>
+                  {account.displayName}
+                </ScoreButton>
               );
             })()}
           </div>

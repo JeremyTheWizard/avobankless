@@ -44,7 +44,7 @@ const Withdraw: React.FC<Props> = ({}) => {
       >
         <div
           onClick={(e) => stopPropagation(e)}
-          className="space-y-lg w-full max-w-4xl flex flex-col items-center"
+          className="space-y-lg w-full max-w-4xl flex flex-col items-center p-md"
         >
           <Typography variant="h5" className="font-bold">
             WITHDRAW

@@ -28,13 +28,13 @@ const ScoreButton: React.FC<Props> = ({
         <button
           disabled={disabled}
           onClick={onClick}
-          className={`w-max border-2 border-almostBlack px-12 py-3 rounded-100 bg-object text-almostWhite  ${twProps} ${
+          className={`w-full border-2 border-almostBlack p-3 rounded-100 bg-object text-almostWhite  ${twProps} ${
             disabled
               ? "opacity-50 cursor-not-allowed pointer-events-none"
               : "cursor-pointer"
           }`}
         >
-          {text}
+          <span className="text-base">{text}</span>
           {children}
         </button>
       </span>

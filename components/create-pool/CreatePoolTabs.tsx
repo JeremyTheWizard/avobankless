@@ -58,8 +58,8 @@ export default function WithdrawTabs({}) {
           variant="fullWidth"
         >
           <Tab
-            className="text-lg font-extrabold text-black"
-            label="Liquidity Providers"
+            className="text-2xl font-bold text-black"
+            label="Create your own pool"
             {...a11yProps(0)}
           />
         </Tabs>
@@ -68,6 +68,7 @@ export default function WithdrawTabs({}) {
       <TabPanel value={value} index={0}>
         <div className="space-y-md w-full">
           <WithdrawAmountInput />
+          <WithdrawAmountInput placeholder="Liquidity rewards" />
           <SelectInterestRangeInput />
         </div>
         <ScoreButton text="Create" twProps="!w-full mt-lg" />

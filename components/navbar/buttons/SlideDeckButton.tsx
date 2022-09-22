@@ -22,17 +22,14 @@ const SlideDeckButton: React.FC<Props> = ({
     <Tooltip title={tooltip ? tooltip : ""}>
       <span>
         <button
-          disabled={disabled}
           onClick={onClick}
-          className={`w-max ${
-            size == "md" && "min-w-[183px]"
-          } border-[1px] px-18 py-3 text-darkishRed rounded-100 border-darkGreen ${
+          className={` w-full border-[1px] border-darkGreen p-3 text-darkGreen bg-transparent rounded-100 ${
             disabled
               ? "opacity-50 cursor-not-allowed pointer-events-none"
               : "cursor-pointer"
           } ${twProps}`}
         >
-          {text}
+          <span className="text-base">{text}</span>
         </button>
       </span>
     </Tooltip>

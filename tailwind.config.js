@@ -1,11 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  plugins: [require("@tailwindcss/typography"), require("tailwind-scrollbar")],
+
+  corePlugins: {
+    preflight: true,
+  },
   content: [
-    "./node_modules/flowbite-react/**/*.js",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   important: "#__next",
+  // purge: [],
   theme: {
     fontFamily: {
       mulish: ["Mulish", "sans-serif"],
@@ -34,6 +39,8 @@ module.exports = {
       backgroundImage: {
         body: "linear-gradient(106.56deg, #D8FCE5 -20.93%, #FFFFFF 31.18%, #FFFFFF 88.98%, #D8FCE5 135.39%)",
         object: "linear-gradient(90deg, #014E1C 2.7%, #4EE142 96.96%)",
+        objectDown:
+          "linear-gradient(130.28deg, #014E1C 3.57%, #52FF00 126.38%);",
       },
       borderRadius: {
         100: "100px",
@@ -53,11 +60,6 @@ module.exports = {
 
     boxShadow: {
       equal: "0px 0px 10px rgba(0,0,0,0.25)",
-    },
-
-    plugins: [],
-    corePlugins: {
-      preflight: false,
     },
   },
 };

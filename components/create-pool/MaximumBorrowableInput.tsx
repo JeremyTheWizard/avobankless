@@ -56,7 +56,7 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
       <SearchIconWrapper>{DAI}</SearchIconWrapper>
       <StyledInputBase
         className="w-full"
-        placeholder={"Maximum amount to borrow"}
+        placeholder={placeholder ? placeholder : "Maximum amount to borrow"}
         inputProps={{ "aria-label": "search" }}
         type="number"
       />

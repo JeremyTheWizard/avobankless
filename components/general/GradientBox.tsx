@@ -8,7 +8,7 @@ type Props = {
 const GradientBox: React.FC<Props> = ({ children, twProps }) => {
   return (
     <div
-      className={`bg-object flex justify-around w-full py-sm text-almostWhite rounded-2xl ${twProps}`}
+      className={`bg-objectDown flex justify-around p-sm text-almostWhite rounded-2xl ${twProps}`}
     >
       {children}
     </div>

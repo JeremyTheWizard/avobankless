@@ -1,7 +1,8 @@
 // import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import LINK from "next/link";
-import { ConnectButton1 } from "../general/ConnectButton1";
+import router from "next/router";
+import ScoreButton from "./buttons/ScoreButton";
 
 const Navbar: React.FC = () => {
   const navbar = () => {
@@ -17,7 +18,13 @@ const Navbar: React.FC = () => {
             />
           </div>
         </LINK>
-        <ConnectButton1 />
+        <div className="w-full max-w-[150px] md:max-w-[250px]">
+          <ScoreButton
+            text="Launch App"
+            onClick={() => router.push("/creditscore")}
+            twProps="!py-2"
+          />
+        </div>
       </nav>
     );
   };
