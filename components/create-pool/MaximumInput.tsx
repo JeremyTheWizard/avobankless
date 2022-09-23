@@ -1,14 +1,28 @@
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
-import { FC } from "react";
+import { BigNumber } from "ethers";
+import { Dispatch, FC, SetStateAction } from "react";
 import dai from "../../public/dai.png";
 
 type Props = {
   placeholder?: string;
   size?: "sm" | "md" | "lg";
+  icon?: React.ReactNode;
+  setMaximum?:
+    | Dispatch<SetStateAction<BigNumber | number>>
+    | React.MutableRefObject<undefined>;
+  name?: string;
+  marginLeft?: string;
 };
 
-const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
+const WithdrawAmountInput: FC<Props> = ({
+  placeholder,
+  size = "md",
+  icon,
+  setMaximum,
+  name,
+  marginLeft,
+}) => {
   const Search: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
       <div
@@ -37,7 +51,12 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
     </div>
   );
 
+  const onChange = (e: any) => {
+    setMaximum ? e.target.value : null;
+  };
+
   const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    require: true,
     inputMode: "numeric",
     fontSize: 20,
     pattern: "[0-9]",
@@ -45,7 +64,7 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
     "& .MuiInputBase-input": {
       padding: theme.spacing(3, 1, 3, 0),
       // vertical padding + font size from searchIcon
-      paddingLeft: `calc(6em + ${theme.spacing(4)})`,
+      paddingLeft: marginLeft ? marginLeft : `calc(6em + ${theme.spacing(4)})`,
       transition: theme.transitions.create("width"),
       width: "100%",
     },
@@ -53,8 +72,11 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
 
   return (
     <Search>
-      <SearchIconWrapper>{DAI}</SearchIconWrapper>
+      <SearchIconWrapper>{icon ? icon : DAI}</SearchIconWrapper>
       <StyledInputBase
+        onChange={onChange}
+        required={true}
+        name={name ? name : "amount"}
         className="w-full"
         placeholder={placeholder ? placeholder : "Maximum amount to borrow"}
         inputProps={{ "aria-label": "search" }}

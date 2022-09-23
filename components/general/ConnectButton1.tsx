@@ -1,8 +1,19 @@
-import { ConnectButton, useAccountModal } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useEthers } from "@usedapp/core";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
 import ScoreButton from "../navbar/buttons/ScoreButton";
 
 export const ConnectButton1 = () => {
-  const { openAccountModal } = useAccountModal();
+  const { address } = useAccount();
+  const { activateBrowserWallet } = useEthers();
+
+  useEffect(() => {
+    if (address) {
+      activateBrowserWallet();
+    }
+  }, [address]);
+
   return (
     <ConnectButton.Custom>
       {({
@@ -44,9 +55,12 @@ export const ConnectButton1 = () => {
               }
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type="button">
-                    Wrong network
-                  </button>
+                  <ScoreButton
+                    onClick={openChainModal}
+                    type="button"
+                    text="Wrong network"
+                    twProps={"!bg-gradient-to-r from-red-600 to-red-600"}
+                  />
                 );
               }
               return (

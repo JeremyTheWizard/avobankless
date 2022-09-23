@@ -1,16 +1,17 @@
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import Typography from "@mui/material/Typography";
+import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useAccount } from "wagmi";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import useGetPoolsInfo from "../../hooks/useGetPoolsInfo";
+import useGetPoolState from "../../hooks/useGetPoolState";
+import useGetPositionsInfo from "../../hooks/useGetPositionsInfo";
 import dai from "../../public/dai.png";
 import { openBorrow } from "../../slices/borrowSlice";
-import { getWithdrawState, openWithdraw } from "../../slices/withdrawSlice";
-import { Deposits, Loans } from "../../utils/types";
+import { openWithdraw } from "../../slices/withdrawSlice";
 import SlideDeckButton from "../navbar/buttons/SlideDeckButton";
 
 interface TabPanelProps {
@@ -49,99 +50,129 @@ function a11yProps(index: number) {
 
 export default function BasicTabs({}) {
   const [value, setValue] = useState(0);
-  const { address } = useAccount();
-  const [deposits, setDeposits] = useState<Array<JSX.Element>>([]);
-  const [loansInfo, setLoansInfo] = useState<Loans>([]);
+  const { account: address } = useEthers();
   const [loans, setLoans] = useState<Array<JSX.Element>>([]);
-  const { withdraw } = useSelector(getWithdrawState);
+  const [deposits, setDeposits] = useState<Array<JSX.Element>>([]);
+  const [userPositions, setUserPositions] = useState<Array<any>>();
+  const [userPoolsAddresses, setUserPoolsAddresses] = useState<string[]>([]);
+  const [userTokenIds, setUserTokenIds] = useState<string[]>([]);
 
   const dispatch = useDispatch();
+  const userPositionsInfo = useGetPositionsInfo(userTokenIds);
+  const poolsInfo = useGetPoolsInfo(userPoolsAddresses);
+  console.log("🚀 ~ userPositionsInfo", userPositionsInfo);
+
+  let nfts: any;
+
+  const getUserPositions = useCallback(async () => {
+    const options = {
+      method: "GET",
+      url: "https://api.nftport.xyz/v0/accounts/0xfd94B585517d532BC4B80E35bC26383E7834f8b9",
+      params: {
+        chain: "goerli",
+        contract_address: "0xd4188B2E56098B13DB31F41E08357C5a8273E9Cf",
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "1a528522-d34f-46e4-be38-b3636bb4407f",
+      },
+    };
+    await axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        nfts = response.data.nfts;
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+
+    let tokenIds: string[] = [];
+
+    for (let i = 0; i < nfts.length; i++) {
+      tokenIds.push(nfts[i].tokenId);
+    }
+    setUserTokenIds(tokenIds);
+  }, []);
+
+  useEffect(() => {
+    getUserPositions();
+  }, [getUserPositions]);
+
+  useEffect(() => {
+    if (!userPositionsInfo.length) return;
+
+    let userPoolAddresses: string[] = [];
+    for (let i = 0; i < userPositionsInfo.length; i++) {
+      userPoolAddresses.push(userPositionsInfo[i].ownerAddress);
+    }
+    setUserPoolsAddresses(userPoolAddresses);
+  }, [userPositionsInfo]);
+
+  useEffect(() => {
+    if (!poolsInfo.length) return;
+
+    const styledDeposits = [];
+    for (let i = 0; i < poolsInfo.length; i++) {
+      styledDeposits.push(
+        <>
+          <div
+            key={i}
+            className="grid grid-cols-5 justify-items-center items-center "
+          >
+            <div className="flex gap-xs items-center">
+              <img src={dai.src} alt="dai" className="m-0" />
+              <h5>Dai</h5>
+            </div>
+            <span className="text-base">
+              ${parseInt(poolsInfo[i].normalizedAvailableDeposits?._hex, 16)}K
+            </span>
+            <span className="text-base">${"?"}K</span>
+            <span className="text-base">${poolsInfo[i].available}K</span>
+            <SlideDeckButton
+              onClick={() => dispatch(openWithdraw())}
+              text="Withdraw"
+              size="sm"
+              twProps="!py-1"
+            ></SlideDeckButton>
+          </div>
+        </>
+      );
+    }
+    setDeposits(styledDeposits);
+  }, [poolsInfo]);
+
+  const userPoolState = useGetPoolState(address ?? "");
+
+  useEffect(() => {
+    console.log("userPoolState", userPoolState);
+    const styledLoans = [];
+    if (userPoolState) {
+      if (userPoolState[0])
+        styledLoans.push(
+          <>
+            <div className="grid grid-cols-4 justify-items-center items-center">
+              <div className="flex gap-xs items-center">
+                <img src={dai.src} alt="dai" className="m-0" />
+                <span className="text-base">DAI</span>
+              </div>
+              <span className="text-base">
+                {parseInt(userPoolState?.normalizedAvailableDeposits?._hex, 16)}
+              </span>
+              <span className="text-base">3%</span>
+              <span className="text-base">
+                {parseInt(userPoolState?.normalizedBorrowedAmount?._hex, 16)}
+              </span>
+            </div>
+          </>
+        );
+      setLoans(styledLoans);
+    }
+  }, [userPoolState]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  useEffect(() => {
-    let deposits: Deposits | undefined;
-    const getAddressDeposits = async () => {
-      if (address) {
-        try {
-          deposits = await axios
-            .get(`./api/deposits/${address}`)
-            .then((res) => res.data.deposits);
-        } catch (err) {
-          return err;
-        }
-      }
-      const styledDeposits = [];
-      if (deposits) {
-        for (let i = 0; i < deposits.length; i++) {
-          styledDeposits.push(
-            <>
-              <div
-                key={i}
-                className="grid grid-cols-5 justify-items-center items-center "
-              >
-                <div className="flex gap-xs items-center">
-                  <img src={dai.src} alt="dai" className="m-0" />
-                  <Typography>DAI</Typography>
-                </div>
-                <span className="text-base">${deposits[i].deposited}K</span>
-                <span className="text-base">${deposits[i].earned}K</span>
-                <span className="text-base">${deposits[i].available}K</span>
-                <SlideDeckButton
-                  onClick={() => dispatch(openWithdraw())}
-                  text="Withdraw"
-                  size="sm"
-                  twProps="!py-1"
-                ></SlideDeckButton>
-              </div>
-            </>
-          );
-        }
-      }
-      setDeposits(styledDeposits);
-    };
-    getAddressDeposits();
-  }, [address]);
-
-  useEffect(() => {
-    let loans: Loans | undefined;
-    const getAddressLoans = async () => {
-      if (address) {
-        try {
-          loans = await axios
-            .get(`./api/loans/${address}`)
-            .then((res) => res.data.loans);
-        } catch (err) {
-          return err;
-        }
-      }
-      const styledLoans = [];
-      if (loans) {
-        setLoansInfo(loans);
-        for (let i = 0; i < loans.length; i++) {
-          styledLoans.push(
-            <>
-              <div
-                key={i}
-                className="grid grid-cols-3 justify-items-center items-center"
-              >
-                <div className="flex gap-xs items-center">
-                  <img src={dai.src} alt="dai" className="m-0" />
-                  <span className="text-base">DAI</span>
-                </div>
-                <span className="text-base">{loans[i].avgInterest}</span>
-                <span className="text-base">{loans[i].borrowed}</span>
-              </div>
-            </>
-          );
-        }
-      }
-      setLoans(styledLoans);
-    };
-    getAddressLoans();
-  }, [address]);
 
   return (
     <Box
@@ -184,13 +215,14 @@ export default function BasicTabs({}) {
           <h6 className="text-base font-semibold text-darkGreen">Deposited</h6>
           <h6 className="text-base font-semibold text-darkGreen">Available</h6>
         </div>
-        <div className="mb-md">{deposits && deposits}</div>
+        {/* <div className="mb-md">{deposits && deposits}</div> */}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <div>
           <div className="mb-14 lg:mb-0 space-y-sm">
-            <div className="capitalize grid grid-cols-3 justify-items-center">
+            <div className="capitalize grid grid-cols-4 justify-items-center">
               <h6 className="text-base  text-darkGreen">Asset</h6>
+              <h6 className="text-base  text-darkGreen">Deposited</h6>
               <h6 className="text-base text-darkGreen">Avg. Interest</h6>
               <h6 className="text-base text-darkGreen">Borrowed</h6>
             </div>
@@ -214,10 +246,14 @@ export default function BasicTabs({}) {
           </div>
           <div className="grid grid-cols-2 text-center w-full">
             <span className="m-0 text-base text-almostWhite">
-              {loansInfo[0]?.endsOn}
+              {parseInt(userPoolState?.currentMaturity._hex, 16)
+                ? 0
+                : "No duration set"}
             </span>
             <span className="m-0 text-base text-almostWhite">
-              {loansInfo[0]?.flowRate}
+              {parseInt(userPoolState?.flowRate?._hex ?? 0) === 0
+                ? "Borrow first"
+                : parseInt(userPoolState?.flowRate?._hex ?? 0)}
             </span>
           </div>
         </div>

@@ -1,10 +1,10 @@
-import axios from "axios";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import Deposit from "../../components/deposit/Deposit";
 import GradientBorder from "../../components/general/GradientBorder";
 import SearchBar from "../../components/general/SearchBar";
 import ScoreButton from "../../components/navbar/buttons/ScoreButton";
+import useGetPoolsInfo from "../../hooks/useGetPoolsInfo";
 import coin from "../../public/coin.png";
 import dai from "../../public/dai.png";
 import { processCreditScore } from "../../utils/processRawCreditScore";
@@ -15,46 +15,44 @@ const LendingPools: NextPage = () => {
   const [lendingPools, setLendingPools] = useState<Array<JSX.Element>>([]);
   const [openBorrow, setOpenBorrow] = useState(false);
 
+  const poolsInfo = useGetPoolsInfo();
+
   useEffect(() => {
     const getLendingPools = async () => {
-      let lendingPools = [];
-      try {
-        lendingPools = await axios
-          .get("/api/lendingpools")
-          .then((res) => res?.data.lendingPools);
-      } catch (err) {
-        console.log(err);
-      }
       let styledLendingPools = [];
-      for (let i = 0; i < lendingPools.length; i++) {
-        const creditScore = processCreditScore(lendingPools[i].creditScore);
-        let creditScoreColor;
-        if (creditScore <= 25) {
-          creditScoreColor = "#dc2626";
-        } else if (creditScore <= 50) {
-          creditScoreColor = "#fbbf24";
-        } else if (creditScore <= 75) {
-          creditScoreColor = "#60a5fa";
-        } else {
-          creditScoreColor = "#22c55e";
+      if (poolsInfo) {
+        console.log("🚀 ~ poolsInfo", poolsInfo);
+
+        for (let i = 0; i < poolsInfo.length; i++) {
+          const creditScore = processCreditScore(643);
+          let creditScoreColor;
+          if (creditScore <= 25) {
+            creditScoreColor = "#dc2626";
+          } else if (creditScore <= 50) {
+            creditScoreColor = "#fbbf24";
+          } else if (creditScore <= 75) {
+            creditScoreColor = "#60a5fa";
+          } else {
+            creditScoreColor = "#22c55e";
+          }
+          styledLendingPools.push(
+            <>
+              <div className="flex gap-xs items-center">
+                <img src={dai.src} alt="dai" className="m-0" />
+                <span className="text-base">DAI</span>
+              </div>
+              <span className="text-base">${poolsInfo}k</span>
+              <span className="text-base">{poolsInfo}k</span>
+              <span className="text-base">${poolsInfo}</span>
+              <span className="text-base">{poolsInfo}%</span>
+              <span className="text-base">{poolsInfo}%</span>
+              <span className="text-base">{poolsInfo}%</span>
+              <span color={creditScoreColor}>{poolsInfo}</span>
+              <ScoreButton text="Deposit" onClick={() => setOpenBorrow(true)} />
+            </>
+          );
+          setLendingPools(styledLendingPools);
         }
-        styledLendingPools.push(
-          <>
-            <div className="flex gap-xs items-center">
-              <img src={dai.src} alt="dai" className="m-0" />
-              <span className="text-base">DAI</span>
-            </div>
-            <span className="text-base">${lendingPools[i].deposit}k</span>
-            <span className="text-base">{lendingPools[i].TVL}k</span>
-            <span className="text-base">${lendingPools[i].borrowed}</span>
-            <span className="text-base">{lendingPools[i].activeAPY}%</span>
-            <span className="text-base">{lendingPools[i].rewardAPY}%</span>
-            <span className="text-base">{lendingPools[i].yearnAPY}%</span>
-            <span color={creditScoreColor}>{lendingPools[i].creditScore}</span>
-            <ScoreButton text="Deposit" onClick={() => setOpenBorrow(true)} />
-          </>
-        );
-        setLendingPools(styledLendingPools);
       }
     };
     getLendingPools();

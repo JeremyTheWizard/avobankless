@@ -21,7 +21,7 @@ const CreatePool: React.FC<Props> = ({ openCreatePool, setOpenCreatePool }) => {
   };
 
   return (
-    <div>
+    <div className="relative">
       <Backdrop
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,

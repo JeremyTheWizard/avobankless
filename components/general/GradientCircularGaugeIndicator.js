@@ -6,10 +6,7 @@ const GradientCircularGaugeIndicator = ({ score }) => {
   const [seriesRadial, setSeriesRadial] = useState([1]);
 
   useEffect(() => {
-    console.log(score);
     const creditScore = processCreditScore(score);
-    console.log("🚀 ~ score", score);
-    console.log("🚀 ~ creditScore", creditScore);
     setSeriesRadial([creditScore ? creditScore : 1]);
     if (score) {
       setOptionsRadial({

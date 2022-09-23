@@ -27,7 +27,7 @@ const CreditScore: React.FC = () => {
           .get(`api/creditscore/${address}`)
           .then((res) => res.data.score);
       } catch (err) {
-        console.log(err);
+        return err;
       }
       setCreditScore(score);
     }
@@ -50,10 +50,9 @@ const CreditScore: React.FC = () => {
         .post(`api/creditscore/${address}`)
         .then((res) => res.data.score);
     } catch (err) {
-      console.log(err);
+      return err;
     }
     if (typeof score === "number") {
-      console.log("score", score);
       setCreditScore(score);
     }
   };
