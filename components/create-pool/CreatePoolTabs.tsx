@@ -11,6 +11,8 @@ import {
   establishmentFeeRate,
   lateRepayFeePerBondRate,
   liquidityRewardsActivationThreshold,
+  loanDuration,
+  maxBorrowableAmount,
   maxRateInput,
   minRateInput,
   rateSpacingInput,
@@ -99,8 +101,8 @@ export default function WithdrawTabs({}) {
       minRate: minRateInput,
       maxRate: maxRateInput,
       rateSpacing: rateSpacingInput,
-      maxBorrowableAmount: e.target.maximumBorrowable.value,
-      loanDuration: e.target.loanDuration.value,
+      maxBorrowableAmount: maxBorrowableAmount, //parseEther(String(e.target.maximumBorrowable.value)),
+      loanDuration: loanDuration, //e.target.loanDuration.value,
       distributionRate: distributionRate,
       cooldownPeriod: cooldownPeriod,
       repaymentPeriod: repaymentPeriod,
@@ -111,9 +113,7 @@ export default function WithdrawTabs({}) {
       earlyRepay: true,
     };
 
-    createNewPool(params, {
-      from: address,
-    });
+    createNewPool(params);
   };
 
   return (

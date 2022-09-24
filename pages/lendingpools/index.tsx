@@ -1,12 +1,15 @@
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import Deposit from "../../components/deposit/Deposit";
 import GradientBorder from "../../components/general/GradientBorder";
 import SearchBar from "../../components/general/SearchBar";
 import ScoreButton from "../../components/navbar/buttons/ScoreButton";
+import useGetPoolsAddresses from "../../hooks/useGetPoolsAddresses";
 import useGetPoolsInfo from "../../hooks/useGetPoolsInfo";
 import coin from "../../public/coin.png";
 import dai from "../../public/dai.png";
+import { setSelectedPool } from "../../slices/borrowSlice";
 import { processCreditScore } from "../../utils/processRawCreditScore";
 
 const LendingPools: NextPage = () => {
@@ -14,49 +17,71 @@ const LendingPools: NextPage = () => {
   const [TVL, setTVL] = useState(0);
   const [lendingPools, setLendingPools] = useState<Array<JSX.Element>>([]);
   const [openBorrow, setOpenBorrow] = useState(false);
+  const dispatch = useDispatch();
 
-  const poolsInfo = useGetPoolsInfo();
+  const poolsAddresses = useGetPoolsAddresses();
+  const poolsInfo = useGetPoolsInfo(poolsAddresses);
 
   useEffect(() => {
     const getLendingPools = async () => {
-      let styledLendingPools = [];
-      if (poolsInfo) {
-        console.log("🚀 ~ poolsInfo", poolsInfo);
+      if (!poolsInfo.length) {
+        return;
+      }
 
-        for (let i = 0; i < poolsInfo.length; i++) {
-          const creditScore = processCreditScore(643);
-          let creditScoreColor;
-          if (creditScore <= 25) {
-            creditScoreColor = "#dc2626";
-          } else if (creditScore <= 50) {
-            creditScoreColor = "#fbbf24";
-          } else if (creditScore <= 75) {
-            creditScoreColor = "#60a5fa";
-          } else {
-            creditScoreColor = "#22c55e";
-          }
-          styledLendingPools.push(
-            <>
-              <div className="flex gap-xs items-center">
-                <img src={dai.src} alt="dai" className="m-0" />
-                <span className="text-base">DAI</span>
-              </div>
-              <span className="text-base">${poolsInfo}k</span>
-              <span className="text-base">{poolsInfo}k</span>
-              <span className="text-base">${poolsInfo}</span>
-              <span className="text-base">{poolsInfo}%</span>
-              <span className="text-base">{poolsInfo}%</span>
-              <span className="text-base">{poolsInfo}%</span>
-              <span color={creditScoreColor}>{poolsInfo}</span>
-              <ScoreButton text="Deposit" onClick={() => setOpenBorrow(true)} />
-            </>
-          );
-          setLendingPools(styledLendingPools);
+      let styledLendingPools = [];
+
+      for (let i = 0; i < poolsInfo.length; i++) {
+        console.log("currentPoolInfo", poolsInfo[i]);
+        const creditScore = processCreditScore(770);
+        let creditScoreColor;
+        if (creditScore <= 25) {
+          creditScoreColor = "#dc2626";
+        } else if (creditScore <= 50) {
+          creditScoreColor = "#fbbf24";
+        } else if (creditScore <= 75) {
+          creditScoreColor = "#60a5fa";
+        } else {
+          creditScoreColor = "#22c55e";
         }
+        styledLendingPools.push(
+          <>
+            <div className="flex gap-xs items-center">
+              <img src={dai.src} alt="dai" className="m-0" />
+              <span className="text-base">DAI</span>
+            </div>
+            <span className="text-base">
+              $
+              {parseInt(
+                poolsInfo[i]?.value?.normalizedAvailableDeposits?._hex,
+                16
+              )}
+              k
+            </span>
+            <span className="text-base">
+              {parseInt(
+                poolsInfo[i]?.value?.normalizedBorrowedAmount?._hex,
+                16
+              )}
+              %
+            </span>
+            <span className="text-base">4%</span>
+            <span className="text-base">1%</span>
+            <span className="text-base">2.5%</span>
+            <span color={creditScoreColor}>770</span>
+            <ScoreButton
+              text="Deposit"
+              onClick={() => {
+                setOpenBorrow(true);
+                dispatch(setSelectedPool(poolsAddresses[i]));
+              }}
+            />
+          </>
+        );
+        setLendingPools(styledLendingPools);
       }
     };
     getLendingPools();
-  }, []);
+  }, [poolsInfo]);
 
   return (
     <>
@@ -77,9 +102,8 @@ const LendingPools: NextPage = () => {
             <h6 className="font-bold ">TVL: ${TVL}</h6>
           </div>
         </div>
-        <div className="grid grid-cols-9 items-center justify-items-center w-full space-y-sm ">
+        <div className="grid grid-cols-8 items-center justify-items-center w-full space-y-sm text-base xl:text-lg">
           <h6 className="text-darkGreen capitalize !mb-0 mt-[24px]">Asset</h6>
-          <h6 className="text-darkGreen capitalize">Deposit</h6>
           <h6 className="text-darkGreen capitalize">TVL</h6>
           <h6 className="text-darkGreen capitalize">Borrowed</h6>
           <h6 className="text-darkGreen capitalize">Active APY</h6>

@@ -7,9 +7,10 @@ import dai from "../../public/dai.png";
 type Props = {
   placeholder?: string;
   size?: "sm" | "md" | "lg";
+  name?: string;
 };
 
-const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
+const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md", name }) => {
   const Search: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
       <div
@@ -71,6 +72,8 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
         placeholder={placeholder ? placeholder : "0.00"}
         inputProps={{ "aria-label": "search" }}
         type="number"
+        name={name}
+        required={true}
       />
       <MaxWrapper>
         <Typography variant="h6" className="text-darkGreen cursor-pointer">

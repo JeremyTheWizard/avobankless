@@ -9,11 +9,12 @@ const useGetPoolsInfo = (poolAddresses: string[]) => {
         borrowerPools.address,
         new utils.Interface(borrowerPools.abi)
       ),
-      method: "getPoolStatus",
+      method: "getPoolState",
       args: [address],
     })) ?? [];
 
   const results = useCalls(calls) ?? [];
+  console.log("🚀 ~ results", results);
   results.forEach((result, idx) => {
     if (result && result.error) {
       console.error(
@@ -21,8 +22,7 @@ const useGetPoolsInfo = (poolAddresses: string[]) => {
       );
     }
   });
-  console.log("🚀 ~ results", results);
-  return results.map((result) => result?.value?.[0]);
+  return results as any[];
 };
 
 export default useGetPoolsInfo;

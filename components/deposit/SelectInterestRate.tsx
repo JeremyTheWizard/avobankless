@@ -12,6 +12,8 @@ import React, { FC } from "react";
 type Props = {
   placeholder?: string;
   size?: "sm" | "md" | "lg";
+  name?: string;
+  setYieldProjection?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const ITEM_HEIGHT = 48;
@@ -41,7 +43,12 @@ const options = [
   "14%",
 ];
 
-const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
+const WithdrawAmountInput: FC<Props> = ({
+  placeholder,
+  size = "md",
+  name,
+  setYieldProjection,
+}) => {
   const [personName, setPersonName] = React.useState<string[]>([]);
   const theme = useTheme();
 
@@ -84,6 +91,16 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    if (setYieldProjection) {
+      const refValue = Number(value.slice(0, -1));
+      if (refValue > 5 && refValue < 10) {
+        setYieldProjection((refValue * 40) / 100);
+      } else if (refValue >= 10) {
+        setYieldProjection((refValue * 25) / 100);
+      } else {
+        setYieldProjection((refValue * 80) / 100);
+      }
+    }
   };
 
   return (
@@ -94,7 +111,7 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md" }) => {
           sx={{ width: "100%", borderRadius: "1rem" }}
           value={personName}
           displayEmpty
-          input={<StyledInputBase />}
+          input={<StyledInputBase name={name} required={true} />}
           placeholder={"Select Interest Rate"}
           renderValue={(selected) => {
             if (selected.length === 0) {
