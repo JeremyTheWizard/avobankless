@@ -2,10 +2,10 @@ import { Alert, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import { useEthers } from "@usedapp/core";
 import { parseEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 import useBorrow from "../../hooks/useBorrow";
 import WithdrawAmountInput from "../general/InputAmountWithMaximum";
 import ScoreButton from "../navbar/buttons/ScoreButton";
@@ -48,7 +48,7 @@ export default function BorrowTabs({}) {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showFailureAlert, setShowFailureAlert] = useState(false);
   const [failureMessage, setFailureMessage] = useState("");
-  const { account } = useEthers();
+  const { address: account } = useAccount();
 
   useEffect(() => {
     if (borrowState.status === "Success") {

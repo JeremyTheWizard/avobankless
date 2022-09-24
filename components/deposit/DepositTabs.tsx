@@ -13,6 +13,7 @@ import token1 from "../../deployments/goerli/Token1.json";
 import useApprove from "../../hooks/useApprove";
 import useDeposit from "../../hooks/useDeposit";
 import { getBorrowState } from "../../slices/borrowSlice";
+import { getOthersSlice } from "../../slices/othersSlice";
 import InputAmountWithMaximum from "../general/InputAmountWithMaximum";
 import ScoreButton from "../navbar/buttons/ScoreButton";
 import SelectInterestRangeInput from "./SelectInterestRate";
@@ -48,10 +49,10 @@ function a11yProps(index: number) {
 
 export default function WithdrawTabs({}) {
   const [value, setValue] = useState(0);
-  const [yieldProjection, setYieldProjection] = useState(0);
   const { deposit, depositState, resetDeposit, depositEvents } = useDeposit();
   const { account } = useEthers();
   const { selectedPool } = useSelector(getBorrowState);
+  const { yieldProjection } = useSelector(getOthersSlice);
   const { approve, approveState, resetApprove, approveEvents } = useApprove();
   const [amount, setAmount] = useState<BigNumber>();
   const [rate, setRate] = useState<BigNumber>();
@@ -133,7 +134,7 @@ export default function WithdrawTabs({}) {
               <InputAmountWithMaximum name="amount" />
               <SelectInterestRangeInput
                 name="rate"
-                setYieldProjection={setYieldProjection}
+                showYieldProjection={true}
               />
             </div>
             <div className="flex justify-between w-full">

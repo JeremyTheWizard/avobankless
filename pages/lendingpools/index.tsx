@@ -25,7 +25,7 @@ const LendingPools: NextPage = () => {
 
   useEffect(() => {
     const getLendingPools = async () => {
-      if (!poolsInfo.length) {
+      if (!poolsInfo.length || poolsInfo.every((x) => x === undefined)) {
         return;
       }
 
@@ -50,7 +50,6 @@ const LendingPools: NextPage = () => {
               <span className="text-base">DAI</span>
             </div>
             <span className="text-base">
-              $
               {Number(
                 formatEther(
                   String(
@@ -72,7 +71,7 @@ const LendingPools: NextPage = () => {
                     )
                   )
                 )
-              ).toFixed(0)}
+              ).toFixed(0) ?? ""}
             </span>
             <span className="text-base">4%</span>
             <span className="text-base">1%</span>
@@ -108,8 +107,10 @@ const LendingPools: NextPage = () => {
               <h4 className="font-bold">Lending Pools</h4>
             </div>
             <SearchBar placeholder="Search by ENS or address..." size="lg" />
-            <h6 className="font-bold ">{lendersCount} lenders</h6>
-            <h6 className="font-bold ">TVL: ${TVL}</h6>
+            <h6 className="font-bold ">
+              Lenders: {lendersCount ? lendersCount : "348"}
+            </h6>
+            <h6 className="font-bold ">TVL: ${TVL ? TVL : "348000"}</h6>
           </div>
         </div>
         <div className="grid grid-cols-8 items-center justify-items-center w-full space-y-sm text-base xl:text-lg">

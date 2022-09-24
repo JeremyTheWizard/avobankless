@@ -1,7 +1,7 @@
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { FC } from "react";
+import React, { FC } from "react";
 import dai from "../../public/dai.png";
 
 type Props = {
@@ -106,4 +106,4 @@ const WithdrawAmountInput: FC<Props> = ({
   );
 };
 
-export default WithdrawAmountInput;
+export default React.memo(WithdrawAmountInput);

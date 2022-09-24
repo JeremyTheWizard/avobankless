@@ -12,6 +12,7 @@ type Props = {
   placeholder?: string;
   size?: "sm" | "md" | "lg";
   options?: string[];
+  name?: string;
 };
 
 const ITEM_HEIGHT = 48;
@@ -29,6 +30,7 @@ const WithdrawAmountInput: FC<Props> = ({
   placeholder,
   size = "md",
   options = ["Interest Range: 2% - 15%"],
+  name,
 }) => {
   const [personName, setPersonName] = React.useState<string[]>([options[0]]);
   const theme = useTheme();
@@ -96,4 +98,4 @@ const WithdrawAmountInput: FC<Props> = ({
   );
 };
 
-export default WithdrawAmountInput;
+export default React.memo(WithdrawAmountInput);

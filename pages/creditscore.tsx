@@ -10,6 +10,7 @@ import GradientCircularGaugeIndicator from "../components/general/GradientCircul
 import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 import Withdraw from "../components/withdraw/Withdraw";
+import { getCreatePoolSlice } from "../slices/createPoolSlice";
 import { getWithdrawState } from "../slices/withdrawSlice";
 import { useSelector } from "../store/store";
 
@@ -18,6 +19,8 @@ const CreditScore: React.FC = () => {
   const [creditScore, setCreditScore] = useState<Number | undefined>();
   const [openCreatePool, setOpenCreatePool] = useState(false);
   const { withdraw } = useSelector(getWithdrawState);
+  const { loans } = useSelector(getCreatePoolSlice);
+  console.log("🚀 ~ loans===null", loans === null);
 
   const updateExistingWalletScore = useCallback(async () => {
     if (address) {
@@ -91,11 +94,13 @@ const CreditScore: React.FC = () => {
             </div>
           </GradientBox>
           <div className="w-11/12 mx-auto">
-            <ScoreButton
-              onClick={() => setOpenCreatePool(true)}
-              text="Create Pool"
-              twProps={"!w-full"}
-            />
+            {loans === null && address && (
+              <ScoreButton
+                onClick={() => setOpenCreatePool(true)}
+                text="Create Pool"
+                twProps={"!w-full"}
+              />
+            )}
           </div>
         </div>
         <div className="grid lg:grid-cols-11 xl:gap-md gap-sm">
@@ -201,11 +206,13 @@ const CreditScore: React.FC = () => {
               </div>
             </GradientBox>
             <div className="w-11/12 mx-auto">
-              <ScoreButton
-                onClick={() => setOpenCreatePool(true)}
-                text="Create Pool"
-                twProps={"!w-full"}
-              />
+              {loans === null && address && (
+                <ScoreButton
+                  onClick={() => setOpenCreatePool(true)}
+                  text="Create Pool"
+                  twProps={"!w-full"}
+                />
+              )}
             </div>
             <div className="h-full">
               <GradientBorder

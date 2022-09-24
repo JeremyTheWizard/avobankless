@@ -1,19 +1,21 @@
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import { formatEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
+import { useAccount } from "wagmi";
 import positionManager from "../..//deployments/goerli/PositionManager.json";
 import useGetPoolState from "../../hooks/useGetPoolState";
 import useGetPositionsInfo from "../../hooks/useGetPositionsInfo";
 import dai from "../../public/dai.png";
 import { openBorrow } from "../../slices/borrowSlice";
+import { getCreatePoolSlice, setLoans } from "../../slices/createPoolSlice";
 import { openWithdraw, setSelectedPosition } from "../../slices/withdrawSlice";
+import formatEtherFromHEX from "../../utils/formatEtherFromHEX";
 import SlideDeckButton from "../navbar/buttons/SlideDeckButton";
 
 interface TabPanelProps {
@@ -52,8 +54,8 @@ function a11yProps(index: number) {
 
 export default function BasicTabs({}) {
   const [value, setValue] = useState(0);
-  const { account: address } = useEthers();
-  const [loans, setLoans] = useState<Array<JSX.Element>>([]);
+  const { address } = useAccount();
+  const { loans } = useSelector(getCreatePoolSlice);
   const [deposits, setDeposits] = useState<Array<JSX.Element>>([]);
   const [userTokenIds, setUserTokenIds] = useState<string[]>([]);
 
@@ -61,7 +63,12 @@ export default function BasicTabs({}) {
   const userPositionsInfo = useGetPositionsInfo(userTokenIds);
 
   const getUserPositions = useCallback(async () => {
+    console.log("address", address);
     if (!address) {
+      setDeposits([]);
+      dispatch(setLoans([]));
+      setUserTokenIds([]);
+
       return;
     }
     let nfts: any;
@@ -103,6 +110,7 @@ export default function BasicTabs({}) {
   }, [getUserPositions]);
 
   useDeepCompareEffect(() => {
+    console.log("userPositionsInfo", userPositionsInfo);
     if (
       !userPositionsInfo.length ||
       userPositionsInfo.every((x) => x === undefined)
@@ -158,7 +166,7 @@ export default function BasicTabs({}) {
   useEffect(() => {
     const styledLoans = [];
     if (userPoolState) {
-      if (userPoolState[0])
+      if (userPoolState[0]) {
         styledLoans.push(
           <>
             <div className="grid grid-cols-4 justify-items-center items-center">
@@ -171,12 +179,17 @@ export default function BasicTabs({}) {
               </span>
               <span className="text-base">3%</span>
               <span className="text-base">
-                {parseInt(userPoolState?.normalizedBorrowedAmount?._hex, 16)}
+                {formatEtherFromHEX(
+                  userPoolState?.normalizedBorrowedAmount?._hex
+                )}
               </span>
             </div>
           </>
         );
-      setLoans(styledLoans);
+        dispatch(setLoans(styledLoans));
+      } else {
+        dispatch(setLoans(null));
+      }
     }
   }, [userPoolState]);
 
@@ -225,7 +238,13 @@ export default function BasicTabs({}) {
           <h6 className="text-base font-semibold text-darkGreen">Deposited</h6>
           <h6 className="text-base font-semibold text-darkGreen">Available</h6>
         </div>
-        <div className="mb-md">{deposits && deposits}</div>
+        {deposits.length ? (
+          <div className="mb-md">{deposits}</div>
+        ) : (
+          <span className="text-lg md:text-xl font-bold self-center mt-md">
+            No deposits yet
+          </span>
+        )}
       </TabPanel>
       <TabPanel value={value} index={1}>
         <div>
@@ -239,12 +258,18 @@ export default function BasicTabs({}) {
             {loans && loans}
           </div>
         </div>
-        <div className="w-full max-w-[250px] my-auto self-center">
-          <SlideDeckButton
-            text="Borrow"
-            onClick={() => dispatch(openBorrow())}
-          />
-        </div>
+        {loans ? (
+          <div className="w-full max-w-[250px] my-auto self-center">
+            <SlideDeckButton
+              text="Borrow"
+              onClick={() => dispatch(openBorrow())}
+            />
+          </div>
+        ) : (
+          <span className="text-lg md:text-xl font-bold self-center my-auto p-sm">
+            Create a pool first to be able to borrow and see your loans.
+          </span>
+        )}
         <div className="bg-objectDown flex flex-col mt-auto gap-sm py-6">
           <div className="grid grid-cols-2 text-center w-full gap-sm ">
             <h6 className="m-0 text-base font-semibold text-almostWhite">

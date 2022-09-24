@@ -73,7 +73,7 @@ const GradientCircularGaugeIndicator = ({ score }) => {
               } else if (value <= 50) {
                 return "#fbbf24";
               } else if (value <= 75) {
-                return "#4ade80";
+                return "#60a5fa";
               } else {
                 return "#22c55e";
               }

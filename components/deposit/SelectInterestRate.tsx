@@ -8,12 +8,14 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { FC } from "react";
+import { setYieldProjection } from "../../slices/othersSlice";
+import { useDispatch } from "../../store/store";
 
 type Props = {
   placeholder?: string;
   size?: "sm" | "md" | "lg";
   name?: string;
-  setYieldProjection?: React.Dispatch<React.SetStateAction<number>>;
+  showYieldProjection?: boolean;
 };
 
 const ITEM_HEIGHT = 48;
@@ -47,10 +49,11 @@ const WithdrawAmountInput: FC<Props> = ({
   placeholder,
   size = "md",
   name,
-  setYieldProjection,
+  showYieldProjection,
 }) => {
   const [personName, setPersonName] = React.useState<string[]>([]);
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   function getStyles(
     name: string,
@@ -91,14 +94,14 @@ const WithdrawAmountInput: FC<Props> = ({
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
-    if (setYieldProjection) {
+    if (showYieldProjection) {
       const refValue = Number(value.slice(0, -1));
       if (refValue > 5 && refValue < 10) {
-        setYieldProjection((refValue * 40) / 100);
+        dispatch(setYieldProjection((refValue * 40) / 100));
       } else if (refValue >= 10) {
-        setYieldProjection((refValue * 25) / 100);
+        dispatch(setYieldProjection((refValue * 25) / 100));
       } else {
-        setYieldProjection((refValue * 80) / 100);
+        dispatch(setYieldProjection((refValue * 80) / 100));
       }
     }
   };

@@ -4,7 +4,9 @@ import {
   useSelector as useSelectorBase,
 } from "react-redux";
 import borrowSlice from "../slices/borrowSlice";
+import createPoolSlice from "../slices/createPoolSlice";
 import creditScoreDialogSlice from "../slices/creditScoreDialogSlice";
+import othersSlice from "../slices/othersSlice";
 import withdrawSlice from "../slices/withdrawSlice";
 
 export const store = configureStore({
@@ -12,6 +14,8 @@ export const store = configureStore({
     creditScoreDialog: creditScoreDialogSlice,
     withdrawSlice: withdrawSlice,
     borrowSlice: borrowSlice,
+    createPoolSlice: createPoolSlice,
+    othersSlice: othersSlice,
   },
 });
 

@@ -6,7 +6,7 @@ import ScoreButton from "../navbar/buttons/ScoreButton";
 
 export const ConnectButton1 = () => {
   const { address } = useAccount();
-  const { activateBrowserWallet } = useEthers();
+  const { activateBrowserWallet, deactivate } = useEthers();
 
   useEffect(() => {
     if (address) {
