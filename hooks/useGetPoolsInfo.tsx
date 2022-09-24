@@ -3,6 +3,7 @@ import { Contract, utils } from "ethers";
 import borrowerPools from "../deployments/goerli/BorrowerPools.json";
 
 const useGetPoolsInfo = (poolAddresses: string[]) => {
+  console.log("🚀 ~ poolAddresses", poolAddresses);
   const calls =
     poolAddresses?.map((address) => ({
       contract: new Contract(
@@ -14,7 +15,6 @@ const useGetPoolsInfo = (poolAddresses: string[]) => {
     })) ?? [];
 
   const results = useCalls(calls) ?? [];
-  console.log("🚀 ~ results", results);
   results.forEach((result, idx) => {
     if (result && result.error) {
       console.error(

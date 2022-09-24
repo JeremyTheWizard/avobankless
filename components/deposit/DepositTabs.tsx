@@ -174,7 +174,7 @@ export default function WithdrawTabs({}) {
             variant="filled"
             onClose={() => setShowSuccessAlert(false)}
           >
-            You have created your pool successfully!
+            You have successfully deposited!
           </Alert>
         </div>
       )}

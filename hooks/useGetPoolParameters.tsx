@@ -16,12 +16,10 @@ function useGetPoolParameters(
         args: [account],
       }
     ) ?? {};
-  console.log("value", value);
   if (error) {
     console.error(error.message);
     return undefined;
   }
-  console.log("value", value);
   return value?.[0];
 }
 

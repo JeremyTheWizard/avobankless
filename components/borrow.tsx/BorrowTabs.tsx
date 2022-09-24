@@ -73,7 +73,6 @@ export default function BorrowTabs({}) {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const amount = parseEther(String(e.target.amount.value));
-    console.log("account", account);
     borrow(account, amount);
     setLoading(true);
   };

@@ -1,3 +1,4 @@
+import { formatEther } from "ethers/lib/utils";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -31,7 +32,6 @@ const LendingPools: NextPage = () => {
       let styledLendingPools = [];
 
       for (let i = 0; i < poolsInfo.length; i++) {
-        console.log("currentPoolInfo", poolsInfo[i]);
         const creditScore = processCreditScore(770);
         let creditScoreColor;
         if (creditScore <= 25) {
@@ -51,23 +51,33 @@ const LendingPools: NextPage = () => {
             </div>
             <span className="text-base">
               $
-              {parseInt(
-                poolsInfo[i]?.value?.normalizedAvailableDeposits?._hex,
-                16
-              )}
-              k
+              {Number(
+                formatEther(
+                  String(
+                    parseInt(
+                      poolsInfo[i]?.value?.normalizedAvailableDeposits?._hex,
+                      16
+                    )
+                  )
+                )
+              ).toFixed(0)}
             </span>
             <span className="text-base">
-              {parseInt(
-                poolsInfo[i]?.value?.normalizedBorrowedAmount?._hex,
-                16
-              )}
-              %
+              {Number(
+                formatEther(
+                  String(
+                    parseInt(
+                      poolsInfo[i]?.value?.normalizedBorrowedAmount?._hex,
+                      16
+                    )
+                  )
+                )
+              ).toFixed(0)}
             </span>
             <span className="text-base">4%</span>
             <span className="text-base">1%</span>
             <span className="text-base">2.5%</span>
-            <span color={creditScoreColor}>770</span>
+            <span className={`text-[${creditScoreColor}]`}>770</span>
             <ScoreButton
               text="Deposit"
               onClick={() => {

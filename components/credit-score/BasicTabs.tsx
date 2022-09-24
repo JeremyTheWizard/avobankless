@@ -3,15 +3,17 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
+import { formatEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import useGetPoolsInfo from "../../hooks/useGetPoolsInfo";
+import useDeepCompareEffect from "use-deep-compare-effect";
+import positionManager from "../..//deployments/goerli/PositionManager.json";
 import useGetPoolState from "../../hooks/useGetPoolState";
 import useGetPositionsInfo from "../../hooks/useGetPositionsInfo";
 import dai from "../../public/dai.png";
 import { openBorrow } from "../../slices/borrowSlice";
-import { openWithdraw } from "../../slices/withdrawSlice";
+import { openWithdraw, setSelectedPosition } from "../../slices/withdrawSlice";
 import SlideDeckButton from "../navbar/buttons/SlideDeckButton";
 
 interface TabPanelProps {
@@ -53,28 +55,28 @@ export default function BasicTabs({}) {
   const { account: address } = useEthers();
   const [loans, setLoans] = useState<Array<JSX.Element>>([]);
   const [deposits, setDeposits] = useState<Array<JSX.Element>>([]);
-  const [userPositions, setUserPositions] = useState<Array<any>>();
-  const [userPoolsAddresses, setUserPoolsAddresses] = useState<string[]>([]);
   const [userTokenIds, setUserTokenIds] = useState<string[]>([]);
 
   const dispatch = useDispatch();
   const userPositionsInfo = useGetPositionsInfo(userTokenIds);
-  const poolsInfo = useGetPoolsInfo(userPoolsAddresses);
-  console.log("🚀 ~ userPositionsInfo", userPositionsInfo);
-
-  let nfts: any;
 
   const getUserPositions = useCallback(async () => {
+    if (!address) {
+      return;
+    }
+    let nfts: any;
     const options = {
       method: "GET",
-      url: "https://api.nftport.xyz/v0/accounts/0xfd94B585517d532BC4B80E35bC26383E7834f8b9",
+      url: `https://api.nftport.xyz/v0/accounts/${address}`,
       params: {
         chain: "goerli",
-        contract_address: "0xd4188B2E56098B13DB31F41E08357C5a8273E9Cf",
+        contract_address: positionManager.address,
       },
       headers: {
         "Content-Type": "application/json",
-        Authorization: "1a528522-d34f-46e4-be38-b3636bb4407f",
+        Authorization:
+          process.env.NEXT_PUBLIC_NFT_PORT_AUTHORIZATION ??
+          "1a528522-d34f-46e4-be38-b3636bb4407f",
       },
     };
     await axios
@@ -88,32 +90,28 @@ export default function BasicTabs({}) {
       });
 
     let tokenIds: string[] = [];
+    console.log("nfts", nfts);
 
-    for (let i = 0; i < nfts.length; i++) {
-      tokenIds.push(nfts[i].tokenId);
+    for (let i = 0; i < nfts?.length; i++) {
+      tokenIds.push(nfts[i].token_id);
     }
     setUserTokenIds(tokenIds);
-  }, []);
+  }, [address]);
 
   useEffect(() => {
     getUserPositions();
   }, [getUserPositions]);
 
-  useEffect(() => {
-    if (!userPositionsInfo.length) return;
-
-    let userPoolAddresses: string[] = [];
-    for (let i = 0; i < userPositionsInfo.length; i++) {
-      userPoolAddresses.push(userPositionsInfo[i].ownerAddress);
+  useDeepCompareEffect(() => {
+    if (
+      !userPositionsInfo.length ||
+      userPositionsInfo.every((x) => x === undefined)
+    ) {
+      return;
     }
-    setUserPoolsAddresses(userPoolAddresses);
-  }, [userPositionsInfo]);
-
-  useEffect(() => {
-    if (!poolsInfo.length) return;
 
     const styledDeposits = [];
-    for (let i = 0; i < poolsInfo.length; i++) {
+    for (let i = 0; i < userPositionsInfo.length; i++) {
       styledDeposits.push(
         <>
           <div
@@ -124,13 +122,25 @@ export default function BasicTabs({}) {
               <img src={dai.src} alt="dai" className="m-0" />
               <h5>Dai</h5>
             </div>
+            <span className="text-base">{"0"}</span>
+            <span className="text-base">{"?"}</span>
             <span className="text-base">
-              ${parseInt(poolsInfo[i].normalizedAvailableDeposits?._hex, 16)}K
+              {Number(
+                formatEther(
+                  String(
+                    parseInt(
+                      userPositionsInfo[i]?.value?.adjustedBalance?._hex,
+                      16
+                    )
+                  )
+                )
+              ).toFixed(0) ?? "?"}
             </span>
-            <span className="text-base">${"?"}K</span>
-            <span className="text-base">${poolsInfo[i].available}K</span>
             <SlideDeckButton
-              onClick={() => dispatch(openWithdraw())}
+              onClick={() => {
+                dispatch(openWithdraw());
+                dispatch(setSelectedPosition(userTokenIds[i]));
+              }}
               text="Withdraw"
               size="sm"
               twProps="!py-1"
@@ -140,12 +150,12 @@ export default function BasicTabs({}) {
       );
     }
     setDeposits(styledDeposits);
-  }, [poolsInfo]);
+  }, [userPositionsInfo]);
 
+  // Loans tab
   const userPoolState = useGetPoolState(address ?? "");
 
   useEffect(() => {
-    console.log("userPoolState", userPoolState);
     const styledLoans = [];
     if (userPoolState) {
       if (userPoolState[0])
@@ -215,7 +225,7 @@ export default function BasicTabs({}) {
           <h6 className="text-base font-semibold text-darkGreen">Deposited</h6>
           <h6 className="text-base font-semibold text-darkGreen">Available</h6>
         </div>
-        {/* <div className="mb-md">{deposits && deposits}</div> */}
+        <div className="mb-md">{deposits && deposits}</div>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <div>

@@ -5,18 +5,37 @@ import { FC } from "react";
 import dai from "../../public/dai.png";
 
 type Props = {
-  placeholder?: string;
+  placeholder?: string | null | undefined;
   size?: "sm" | "md" | "lg";
   name?: string;
+  disabled?: boolean;
+  value?: string;
+  disabledText?: string;
 };
 
-const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md", name }) => {
-  const Search: FC<{ children: React.ReactNode }> = ({ children }) => {
+const WithdrawAmountInput: FC<Props> = ({
+  placeholder,
+  size = "md",
+  name,
+  disabled,
+  disabledText,
+  value,
+}) => {
+  const Search: FC<{
+    children: React.ReactNode;
+    disabled?: boolean;
+    disabledText?: string;
+  }> = ({ children, disabled, disabledText }) => {
     return (
       <div
-        className={`relative rounded-2xl shadow-equal w-full min-w-[110px] flex bg-white
+        className={`relative rounded-2xl shadow-equal w-full min-w-[110px] flex ${
+          disabled ? "bg-gray-400" : "bg-white"
+        }
         `}
       >
+        <div className="w-full flex flex-col items-center absolute h-full justify-center">
+          {disabledText && disabledText}
+        </div>
         {children}
       </div>
     );
@@ -65,15 +84,18 @@ const WithdrawAmountInput: FC<Props> = ({ placeholder, size = "md", name }) => {
   }));
 
   return (
-    <Search>
+    <Search disabled={disabled} disabledText={disabledText}>
       <SearchIconWrapper>{DAI}</SearchIconWrapper>
       <StyledInputBase
         className="w-full"
-        placeholder={placeholder ? placeholder : "0.00"}
+        placeholder={
+          placeholder ? placeholder : placeholder == null ? undefined : "0.00"
+        }
         inputProps={{ "aria-label": "search" }}
         type="number"
         name={name}
         required={true}
+        disabled={disabled}
       />
       <MaxWrapper>
         <Typography variant="h6" className="text-darkGreen cursor-pointer">

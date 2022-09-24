@@ -66,7 +66,6 @@ export default function WithdrawTabs({}) {
   const { createNewPool, createNewPoolState } = useCreatePool();
 
   useEffect(() => {
-    console.log("🚀 ~ createNewPoolState", createNewPoolState);
     if (
       createNewPoolState.status === "Fail" ||
       createNewPoolState.status === "Exception"

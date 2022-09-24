@@ -27,6 +27,7 @@
     "react-redux": "^8.0.2",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
+    "use-deep-compare-effect": "^1.8.1",
     "wagmi": "^0.6.6"
   },
   "devDependencies": {

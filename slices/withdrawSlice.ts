@@ -2,10 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 type Props = {
   withdraw: boolean;
+  selectedPool: string;
+  selectedPosition: string;
 };
 
 const initialState: Props = {
   withdraw: false,
+  selectedPool: "",
+  selectedPosition: "",
 };
 
 export const withdrawSlice = createSlice({
@@ -18,6 +22,12 @@ export const withdrawSlice = createSlice({
     closeWithdraw: (state) => {
       state.withdraw = false;
     },
+    setSelectedPool: (state, action) => {
+      state.selectedPool = action.payload;
+    },
+    setSelectedPosition: (state, action) => {
+      state.selectedPosition = action.payload;
+    },
   },
 });
 
@@ -26,6 +36,11 @@ export const getWithdrawState = (state: { withdrawSlice: Props }) =>
   state.withdrawSlice;
 
 // Exports all actions
-export const { openWithdraw, closeWithdraw } = withdrawSlice.actions;
+export const {
+  openWithdraw,
+  closeWithdraw,
+  setSelectedPool,
+  setSelectedPosition,
+} = withdrawSlice.actions;
 
 export default withdrawSlice.reducer;

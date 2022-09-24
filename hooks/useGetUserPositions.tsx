@@ -22,7 +22,6 @@ const getUserPositions = async () => {
   await axios
     .request(options)
     .then(function (response) {
-      console.log(response.data);
       nfts = response.data.nfts;
     })
     .catch(function (error) {

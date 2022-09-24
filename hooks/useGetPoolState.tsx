@@ -11,10 +11,6 @@ const useGetPoolState = (address: string | undefined) => {
     functionName: "getPoolState",
     args: [address],
   });
-  console.log(
-    "poolParameters",
-    parseInt(poolParameters?.normalizedBorrowedAmount?._hex, 16)
-  );
   return poolParameters;
 };
 

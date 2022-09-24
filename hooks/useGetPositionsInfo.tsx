@@ -1,13 +1,13 @@
 import { useCalls } from "@usedapp/core";
 import { Contract, utils } from "ethers";
-import borrowerPools from "../deployments/goerli/BorrowerPools.json";
+import positionManager from "../deployments/goerli/PositionManager.json";
 
 const useGetPositionsInfo = (positions: string[]) => {
   const calls =
     positions?.map((position) => ({
       contract: new Contract(
-        borrowerPools.address,
-        new utils.Interface(borrowerPools.abi)
+        positionManager.address,
+        new utils.Interface(positionManager.abi)
       ),
       method: "position",
       args: [position],
@@ -21,8 +21,7 @@ const useGetPositionsInfo = (positions: string[]) => {
       );
     }
   });
-  console.log("🚀 ~ useGetPositionsInfo results", results);
-  return results.map((result) => result?.value?.[0]);
+  return results as any[];
 };
 
 export default useGetPositionsInfo;
