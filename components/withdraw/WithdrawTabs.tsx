@@ -69,7 +69,13 @@ export default function WithdrawTabs({}) {
       setLoading(false);
       resetWithdraw();
     }
-  }, [withdrawState]);
+  }, [
+    withdrawState,
+    resetWithdraw,
+    setLoading,
+    setShowFailureAlert,
+    setShowSuccessAlert,
+  ]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

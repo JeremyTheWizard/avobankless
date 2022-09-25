@@ -12,7 +12,7 @@ export const ConnectButton1 = () => {
     if (address) {
       activateBrowserWallet();
     }
-  }, [address]);
+  }, [address, activateBrowserWallet]);
 
   return (
     <ConnectButton.Custom>

@@ -191,7 +191,7 @@ export default function BasicTabs({}) {
         dispatch(setLoans(null));
       }
     }
-  }, [userPoolState]);
+  }, [userPoolState, dispatch]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

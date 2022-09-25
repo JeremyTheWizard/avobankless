@@ -64,7 +64,14 @@ export default function BorrowTabs({}) {
       setLoading(false);
       resetBorrowState();
     }
-  }, [borrowState]);
+  }, [
+    borrowState,
+    resetBorrowState,
+    setShowFailureAlert,
+    setLoading,
+    setShowSuccessAlert,
+    setFailureMessage,
+  ]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

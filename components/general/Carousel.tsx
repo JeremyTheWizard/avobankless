@@ -18,6 +18,7 @@ const slides = [
     twProps={
       "flex-col items-center relative gap-sm pb-14 max-w-sm sm:max-w-xl md:max-w-2xl "
     }
+    key={1}
   >
     <img src={borrow.src} alt="Hand holding coin" className="w-40 h-40 m-0" />
     <h2 className="text-almostWhite">Borrowing any time</h2>
@@ -30,6 +31,7 @@ const slides = [
     twProps={
       "flex-col items-center relative gap-sm pb-14 max-w-sm sm:max-w-xl md:max-w-2xl "
     }
+    key={2}
   >
     <img src={lend.src} alt="hand giving cash" className="w-40 h-40 m-0" />
     <h2 className="text-almostWhite">Lend with Autopay</h2>
@@ -39,6 +41,7 @@ const slides = [
     </p>
   </GradientBox>,
   <GradientBox
+    key={3}
     twProps={
       "flex-col items-center relative gap-sm pb-14 max-w-sm sm:max-w-xl md:max-w-2xl "
     }

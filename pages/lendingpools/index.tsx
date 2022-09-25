@@ -90,7 +90,7 @@ const LendingPools: NextPage = () => {
       }
     };
     getLendingPools();
-  }, [poolsInfo]);
+  }, [poolsInfo, dispatch, poolsAddresses]);
 
   return (
     <>
