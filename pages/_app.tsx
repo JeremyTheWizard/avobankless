@@ -56,6 +56,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     [
       // chain.arbitrumGoerli,
       // chain.arbitrumRinkeby,
+      chain.goerli,
       ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
         ? [chain.goerli]
         : []),
