@@ -31,5 +31,6 @@ export const NEXT_BOND_ISSUANCE_INDEX = FIRST_BOND_ISSUANCE_INDEX.add(1);
 export const FIRST_TOKEN_ID = 1;
 export const ONE_HOUR = 3600;
 export const secondsPerYear = 365 * 24 * 60 * 60;
+export const secondsPerDay = 24 * 60 * 60;
 export const GOVERNANCE_ROLE = keccak256(toUtf8Bytes("GOVERNANCE_ROLE"));
 export const POSITION_ROLE = keccak256(toUtf8Bytes("POSITION_ROLE"));

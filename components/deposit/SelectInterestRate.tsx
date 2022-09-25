@@ -45,6 +45,24 @@ const options = [
   "14%",
 ];
 
+const StyledInputBase = styled(OutlinedInput)(({ theme }) => ({
+  color: "inherit",
+  borderRadius: "1rem",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(3, 1, 3, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    borderRadius: "1rem",
+    backgroundColor: "white",
+    fontSize: "20px",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "0px",
+  },
+}));
+
 const WithdrawAmountInput: FC<Props> = ({
   placeholder,
   size = "md",
@@ -67,24 +85,6 @@ const WithdrawAmountInput: FC<Props> = ({
           : theme.typography.fontWeightMedium,
     };
   }
-
-  const StyledInputBase = styled(OutlinedInput)(({ theme }) => ({
-    color: "inherit",
-    borderRadius: "1rem",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(3, 1, 3, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      borderRadius: "1rem",
-      backgroundColor: "white",
-      fontSize: "20px",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      border: "0px",
-    },
-  }));
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     const {

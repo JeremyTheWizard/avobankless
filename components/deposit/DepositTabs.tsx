@@ -142,7 +142,7 @@ export default function WithdrawTabs({}) {
                 Yield Projection
               </Typography>
               <Typography variant="h6" component="span" className="font-bold">
-                {yieldProjection}
+                {yieldProjection}%
               </Typography>
             </div>
             <ScoreButton

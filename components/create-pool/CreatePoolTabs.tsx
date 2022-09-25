@@ -22,6 +22,9 @@ import {
 import token1 from "../../deployments/goerli/Token1.json";
 import yearnFinanceWrapper from "../../deployments/goerli/YearnFinanceWrapper.json";
 import useCreatePool from "../../hooks/useCreatePool";
+import dai from "../../public/dai.png";
+import { setLoans } from "../../slices/createPoolSlice";
+import { useDispatch } from "../../store/store";
 import ScoreButton from "../navbar/buttons/ScoreButton";
 import MaximumInput from "./MaximumInput";
 import SelectInterestRangeInput from "./SelectInterestRangeInput";
@@ -62,6 +65,7 @@ export default function WithdrawTabs({}) {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showFailureAlert, setShowFailureAlert] = useState(false);
   const [failureMessage, setFailureMessage] = useState("");
+  const dispatch = useDispatch();
 
   const { createNewPool, createNewPoolState } = useCreatePool();
 
@@ -83,6 +87,24 @@ export default function WithdrawTabs({}) {
     if (createNewPoolState.status === "Success") {
       setLoading(false);
       setShowSuccessAlert(true);
+      dispatch(
+        setLoans([
+          <>
+            <div
+              key={0}
+              className="grid grid-cols-4 justify-items-center items-center "
+            >
+              <div className="flex gap-xs items-center">
+                <img src={dai.src} alt="dai" className="m-0" />
+                <h5>Dai</h5>
+              </div>
+              <span className="text-base">{"0"}</span>
+              <span className="text-base">{"---"}</span>
+              <span className="text-base">0</span>
+            </div>
+          </>,
+        ])
+      );
     }
   }, [createNewPoolState]);
 
@@ -145,7 +167,7 @@ export default function WithdrawTabs({}) {
                 name="liquidityRewards"
               />
               <MaximumInput
-                placeholder="Loan duration"
+                placeholder="Loan duration in days"
                 icon={<span></span>}
                 name="loanDuration"
                 marginLeft="2rem"

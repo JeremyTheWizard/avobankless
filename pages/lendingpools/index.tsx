@@ -6,11 +6,13 @@ import Deposit from "../../components/deposit/Deposit";
 import GradientBorder from "../../components/general/GradientBorder";
 import SearchBar from "../../components/general/SearchBar";
 import ScoreButton from "../../components/navbar/buttons/ScoreButton";
+import TestFaucet from "../../components/testFaucet";
 import useGetPoolsAddresses from "../../hooks/useGetPoolsAddresses";
 import useGetPoolsInfo from "../../hooks/useGetPoolsInfo";
 import coin from "../../public/coin.png";
 import dai from "../../public/dai.png";
 import { setSelectedPool } from "../../slices/borrowSlice";
+import formatEtherFromHEX from "../../utils/formatEtherFromHEX";
 import { processCreditScore } from "../../utils/processRawCreditScore";
 
 const LendingPools: NextPage = () => {
@@ -50,16 +52,9 @@ const LendingPools: NextPage = () => {
               <span className="text-base">DAI</span>
             </div>
             <span className="text-base">
-              {Number(
-                formatEther(
-                  String(
-                    parseInt(
-                      poolsInfo[i]?.value?.normalizedAvailableDeposits?._hex,
-                      16
-                    )
-                  )
-                )
-              ).toFixed(0)}
+              {formatEtherFromHEX(
+                poolsInfo[i]?.value?.normalizedAvailableDeposits?._hex
+              ) ?? ""}
             </span>
             <span className="text-base">
               {Number(
@@ -68,7 +63,7 @@ const LendingPools: NextPage = () => {
                     parseInt(
                       poolsInfo[i]?.value?.normalizedBorrowedAmount?._hex,
                       16
-                    )
+                    ) ?? ""
                   )
                 )
               ).toFixed(0) ?? ""}
@@ -126,6 +121,8 @@ const LendingPools: NextPage = () => {
         </div>
       </GradientBorder>
       <Deposit openBorrow={openBorrow} setOpenBorrow={setOpenBorrow} />
+
+      <TestFaucet />
     </>
   );
 };

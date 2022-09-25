@@ -9,18 +9,18 @@ import GradientBox from "../components/general/GradientBox";
 import GradientCircularGaugeIndicator from "../components/general/GradientCircularGaugeIndicator";
 import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
+import TestFaucet from "../components/testFaucet";
 import Withdraw from "../components/withdraw/Withdraw";
-import { getCreatePoolSlice } from "../slices/createPoolSlice";
-import { getWithdrawState } from "../slices/withdrawSlice";
-import { useSelector } from "../store/store";
+import { getCreatePoolSlice, toggleOpen } from "../slices/createPoolSlice";
+import { useDispatch, useSelector } from "../store/store";
 
 const CreditScore: React.FC = () => {
-  const { isDisconnected, address } = useAccount();
+  const { address } = useAccount();
   const [creditScore, setCreditScore] = useState<Number | undefined>();
-  const [openCreatePool, setOpenCreatePool] = useState(false);
-  const { withdraw } = useSelector(getWithdrawState);
   const { loans } = useSelector(getCreatePoolSlice);
-  console.log("🚀 ~ loans===null", loans === null);
+  const [openCreatePool, setOpenCreatePool] = useState(false);
+  const dispatch = useDispatch();
+  console.log("loans", loans);
 
   const updateExistingWalletScore = useCallback(async () => {
     if (address) {
@@ -36,15 +36,15 @@ const CreditScore: React.FC = () => {
     }
   }, [address]);
 
-  useEffect(() => {
-    updateExistingWalletScore();
-  }, [updateExistingWalletScore]);
+  // useEffect(() => {
+  //   updateExistingWalletScore();
+  // }, [updateExistingWalletScore]);
 
   useEffect(() => {
-    if (isDisconnected) {
+    if (!address) {
       setCreditScore(undefined);
     }
-  }, [isDisconnected]);
+  }, [!address]);
 
   const calculateWalletScore = async () => {
     let score;
@@ -65,7 +65,7 @@ const CreditScore: React.FC = () => {
       <div className="space-y-md overflow-hidden">
         <div className="lg:hidden">
           <h3 className="text-darkishRed text-3xl sm:text-4xl md:text-5xl text-center">
-            Generate Your Score {""}
+            Generate Your Score, {""}
             <span className="font-bold bg-object bg-clip-text text-transparent capitalize">
               Guacamole!
             </span>
@@ -94,9 +94,9 @@ const CreditScore: React.FC = () => {
             </div>
           </GradientBox>
           <div className="w-11/12 mx-auto">
-            {loans === null && address && (
+            {loans === undefined && address && (
               <ScoreButton
-                onClick={() => setOpenCreatePool(true)}
+                onClick={() => dispatch(toggleOpen())}
                 text="Create Pool"
                 twProps={"!w-full"}
               />
@@ -107,19 +107,20 @@ const CreditScore: React.FC = () => {
           <div className="space-y-md w-full min-w-0 min-h-0 col-span-5">
             <div className="hidden lg:block">
               <h3 className="text-darkishRed md:text lg:text-3xl xl:text-4xl mt-0">
-                Generate Your Score {""}
+                Generate Your Score, {""}
                 <span className="font-bold bg-object bg-clip-text text-transparent capitalize">
                   Guacamole!
                 </span>
               </h3>
               <p>
-                Connect wallet for Check History, DeFi activity and Social Graph
+                Connect your wallet to check your Transaction History, DeFi
+                activity and Social Graph.
               </p>
             </div>
             <GradientBorder twPropsChild="!lg:space-y-lg !space-y-md ">
               <div className="flex flex-col items-center gap-xs">
                 <h3 className="font-bold">🥑Avo Score</h3>
-                <span>Multi Asset Credit Risk Oracle on-chain.</span>
+                <span>Multi Asset Credit Risk Oracle.</span>
               </div>
               <div className="flex flex-col items-center">
                 <GradientCircularGaugeIndicator
@@ -152,11 +153,11 @@ const CreditScore: React.FC = () => {
                   </div>
                   <div className="flex gap-xs items-center">
                     <div className="w-4 aspect-square rounded-full bg-green-400"></div>{" "}
-                    <caption>
+                    <span>
                       Stable
                       <br />
                       (+ 637)
-                    </caption>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -164,8 +165,8 @@ const CreditScore: React.FC = () => {
                 <div className="w-full max-w-xs">
                   <ScoreButton
                     text="Calculate Score"
-                    disabled={isDisconnected && true}
-                    tooltip={isDisconnected ? "Connect your wallet first" : ""}
+                    disabled={!address && true}
+                    tooltip={!address ? "Connect your wallet first" : ""}
                     onClick={() => calculateWalletScore()}
                   />
                 </div>
@@ -173,9 +174,9 @@ const CreditScore: React.FC = () => {
                   <SlideDeckButton
                     size="md"
                     text="Verify"
-                    disabled={(isDisconnected || !creditScore) && true}
+                    disabled={(!address || !creditScore) && true}
                     tooltip={
-                      isDisconnected
+                      !address
                         ? "Connect your wallet first"
                         : !creditScore
                         ? "Calculate your creditScore first"
@@ -206,7 +207,7 @@ const CreditScore: React.FC = () => {
               </div>
             </GradientBox>
             <div className="w-11/12 mx-auto">
-              {loans === null && address && (
+              {loans === undefined && address && (
                 <ScoreButton
                   onClick={() => setOpenCreatePool(true)}
                   text="Create Pool"
@@ -240,6 +241,7 @@ const CreditScore: React.FC = () => {
       />
       <Withdraw />
       <Borrow />
+      <TestFaucet />
     </>
   );
 };

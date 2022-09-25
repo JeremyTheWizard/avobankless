@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 type Props = {
   loans: undefined | [];
+  open: boolean;
 };
 
 const initialState: Props = {
   loans: undefined,
+  open: false,
 };
 
 export const createPoolSlice = createSlice({
@@ -15,6 +17,10 @@ export const createPoolSlice = createSlice({
     setLoans: (state, action) => {
       state.loans = action.payload;
     },
+
+    toggleOpen: (state) => {
+      state.open = !state.open;
+    },
   },
 });
 
@@ -23,6 +29,6 @@ export const getCreatePoolSlice = (state: { createPoolSlice: Props }) =>
   state.createPoolSlice;
 
 // Exports all actions
-export const { setLoans } = createPoolSlice.actions;
+export const { setLoans, toggleOpen } = createPoolSlice.actions;
 
 export default createPoolSlice.reducer;

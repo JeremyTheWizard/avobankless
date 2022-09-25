@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import axios from "axios";
-import { formatEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -133,16 +132,9 @@ export default function BasicTabs({}) {
             <span className="text-base">{"0"}</span>
             <span className="text-base">{"?"}</span>
             <span className="text-base">
-              {Number(
-                formatEther(
-                  String(
-                    parseInt(
-                      userPositionsInfo[i]?.value?.adjustedBalance?._hex,
-                      16
-                    )
-                  )
-                )
-              ).toFixed(0) ?? "?"}
+              {formatEtherFromHEX(
+                userPositionsInfo[i]?.value?.adjustedBalance?._hex
+              )}
             </span>
             <SlideDeckButton
               onClick={() => {
@@ -175,7 +167,9 @@ export default function BasicTabs({}) {
                 <span className="text-base">DAI</span>
               </div>
               <span className="text-base">
-                {parseInt(userPoolState?.normalizedAvailableDeposits?._hex, 16)}
+                {formatEtherFromHEX(
+                  userPoolState?.normalizedAvailableDeposits?._hex
+                )}
               </span>
               <span className="text-base">3%</span>
               <span className="text-base">
@@ -188,7 +182,7 @@ export default function BasicTabs({}) {
         );
         dispatch(setLoans(styledLoans));
       } else {
-        dispatch(setLoans(null));
+        dispatch(setLoans(undefined));
       }
     }
   }, [userPoolState, dispatch]);
@@ -258,18 +252,34 @@ export default function BasicTabs({}) {
             {loans && loans}
           </div>
         </div>
-        {loans ? (
-          <div className="w-full max-w-[250px] my-auto self-center">
-            <SlideDeckButton
-              text="Borrow"
-              onClick={() => dispatch(openBorrow())}
-            />
+        {
+          <div className=" p-sm my-auto self-center flex flex-col items-center">
+            <div className="w-full max-w-[250px] my-auto self-center">
+              <SlideDeckButton
+                text="Borrow"
+                onClick={() => dispatch(openBorrow())}
+                disabled={
+                  loans?.length &&
+                  userPoolState?.normalizedAvailableDeposits?._hex != "0x00"
+                    ? false
+                    : true
+                }
+              />
+            </div>
+            {loans?.length &&
+            userPoolState?.normalizedAvailableDeposits?._hex != "0x00" ? (
+              ""
+            ) : loans?.length ? (
+              <span className="text-lg md:text-lg self-center my-auto p-sm">
+                Once someone deposits funds you will be able to borrow
+              </span>
+            ) : (
+              <span className="text-lg md:text-lg self-center my-auto p-sm">
+                Create a pool first to be able to borrow and see your loans.
+              </span>
+            )}
           </div>
-        ) : (
-          <span className="text-lg md:text-xl font-bold self-center my-auto p-sm">
-            Create a pool first to be able to borrow and see your loans.
-          </span>
-        )}
+        }
         <div className="bg-objectDown flex flex-col mt-auto gap-sm py-6">
           <div className="grid grid-cols-2 text-center w-full gap-sm ">
             <h6 className="m-0 text-base font-semibold text-almostWhite">
@@ -281,14 +291,19 @@ export default function BasicTabs({}) {
           </div>
           <div className="grid grid-cols-2 text-center w-full">
             <span className="m-0 text-base text-almostWhite">
-              {parseInt(userPoolState?.currentMaturity._hex, 16)
-                ? 0
-                : "No duration set"}
+              {userPoolState &&
+              userPoolState?.normalizedBorrowedAmount?._hex != "0x00"
+                ? formatEtherFromHEX(
+                    userPoolState?.currentMaturity._hex ?? "---"
+                  )
+                : "Borrow first"}
             </span>
             <span className="m-0 text-base text-almostWhite">
-              {parseInt(userPoolState?.flowRate?._hex ?? 0) === 0
-                ? "Borrow first"
-                : parseInt(userPoolState?.flowRate?._hex ?? 0)}
+              {userPoolState
+                ? userPoolState?.normalizedBorrowedAmount?._hex != "0x00"
+                  ? "0.0000001/second"
+                  : "Borrow first"
+                : "Borrow first"}
             </span>
           </div>
         </div>

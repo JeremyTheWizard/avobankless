@@ -14,6 +14,13 @@ import Carousel from "../components/general/Carousel";
 import GradientBox from "../components/general/GradientBox";
 
 const Home: NextPage = () => {
+  const handleOpenSlideDeck = () => {
+    window.open(
+      "https://pitch.com/public/33b982b3-177d-404c-b932-fc73944be7ae/594a9469-c7e2-45d1-a685-c4a970296423",
+      "_blank"
+    );
+  };
+
   return (
     <div className="overflow-hidden">
       <Head>
@@ -38,7 +45,7 @@ const Home: NextPage = () => {
                 <br />
                 without collateral <br />
                 <span className="bg-object bg-clip-text text-transparent">
-                  is now possible
+                  are now possible
                 </span>
               </h1>
               <p className="mt-4 max-w-xl ">
@@ -54,7 +61,10 @@ const Home: NextPage = () => {
                 />
               </div>
               <div className="w-full max-w-[250px]">
-                <SlideDeckButton text="Slide deck" />
+                <SlideDeckButton
+                  text="Slide deck"
+                  onClick={handleOpenSlideDeck}
+                />
               </div>
             </div>
           </div>
@@ -66,7 +76,7 @@ const Home: NextPage = () => {
             />
           </div>
         </section>
-        <section className="hidden lg:flex justify-center gap-md prose-img:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite ">
+        <section className="hidden lg:grid grid-cols-3 justify-center gap-md prose-img:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite ">
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
             <img
               src={borrow.src}
@@ -125,9 +135,9 @@ const Home: NextPage = () => {
               </span>
             </h2>
             <p>
-              Uncollateralized lending provides an opportunity for lenders to
-              earn higher long-term returns than secured lending, and for
-              borrowers to maximize their capital efficiency.
+              Uncollateralized loans provide an opportunity for lenders to earn
+              higher returns, and for borrowers to maximize their capital
+              efficiency.
             </p>
           </div>
         </div>

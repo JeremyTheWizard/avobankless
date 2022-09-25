@@ -13,8 +13,8 @@ export default function handler(
 ) {
   const { address } = req.query;
   if (req.method === "GET") {
-    res.status(200).json({ success: true, score: 583, timestamp: Date.now() });
+    res.status(200).json({ success: true, score: 650, timestamp: Date.now() });
   } else if (req.method === "POST") {
-    res.status(200).json({ success: true, score: 230, timestamp: Date.now() });
+    res.status(200).json({ success: true, score: 584, timestamp: Date.now() });
   }
 }

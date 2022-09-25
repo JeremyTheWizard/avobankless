@@ -26,6 +26,36 @@ const MenuProps = {
   },
 };
 
+const StyledInputBase = styled(OutlinedInput)(({ theme }) => ({
+  color: "inherit",
+  borderRadius: "1rem",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(3, 1, 3, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    borderRadius: "1rem",
+    backgroundColor: "white",
+    fontSize: "20px",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "0px",
+  },
+  "& .MuiOutlinedInput-input:focus": {
+    borderRadius: "1rem",
+  },
+}));
+
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
 const WithdrawAmountInput: FC<Props> = ({
   placeholder,
   size = "md",
@@ -34,37 +64,6 @@ const WithdrawAmountInput: FC<Props> = ({
 }) => {
   const [personName, setPersonName] = React.useState<string[]>([options[0]]);
   const theme = useTheme();
-
-  function getStyles(
-    name: string,
-    personName: readonly string[],
-    theme: Theme
-  ) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
-
-  const StyledInputBase = styled(OutlinedInput)(({ theme }) => ({
-    color: "inherit",
-    borderRadius: "1rem",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(3, 1, 3, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      borderRadius: "1rem",
-      backgroundColor: "white",
-      fontSize: "20px",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      border: "0px",
-    },
-  }));
 
   return (
     <>
@@ -76,7 +75,7 @@ const WithdrawAmountInput: FC<Props> = ({
           input={<StyledInputBase />}
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <em>Placeholder</em>;
+              return <em className="rounded-2xl">Placeholder</em>;
             }
             return selected.join(", ");
           }}
