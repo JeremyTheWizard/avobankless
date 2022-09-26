@@ -1,3 +1,3 @@
 # avobankless
 
-Decentralized credit bureau for unbanked people on Latam.
+Reinventing the way of making on-chain loans
