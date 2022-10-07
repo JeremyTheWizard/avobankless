@@ -11,6 +11,8 @@ export const ConnectButton1 = () => {
   useEffect(() => {
     if (address) {
       activateBrowserWallet();
+    } else {
+      deactivate();
     }
   }, [address, activateBrowserWallet]);
 

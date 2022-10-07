@@ -2,12 +2,14 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import axios from "axios";
+import { formatEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import { useAccount } from "wagmi";
 import positionManager from "../..//deployments/goerli/PositionManager.json";
+import useGetFlowInfo from "../../hooks/useGetFlowInfo";
 import useGetPoolState from "../../hooks/useGetPoolState";
 import useGetPositionsInfo from "../../hooks/useGetPositionsInfo";
 import dai from "../../public/dai.png";
@@ -62,7 +64,6 @@ export default function BasicTabs({}) {
   const userPositionsInfo = useGetPositionsInfo(userTokenIds);
 
   const getUserPositions = useCallback(async () => {
-    console.log("address", address);
     if (!address) {
       setDeposits([]);
       dispatch(setLoans([]));
@@ -96,7 +97,6 @@ export default function BasicTabs({}) {
       });
 
     let tokenIds: string[] = [];
-    console.log("nfts", nfts);
 
     for (let i = 0; i < nfts?.length; i++) {
       tokenIds.push(nfts[i].token_id);
@@ -109,7 +109,6 @@ export default function BasicTabs({}) {
   }, [getUserPositions]);
 
   useDeepCompareEffect(() => {
-    console.log("userPositionsInfo", userPositionsInfo);
     if (
       !userPositionsInfo.length ||
       userPositionsInfo.every((x) => x === undefined)
@@ -154,6 +153,12 @@ export default function BasicTabs({}) {
 
   // Loans tab
   const userPoolState = useGetPoolState(address ?? "");
+
+  const flowInfo = useGetFlowInfo(
+    userPoolState?.normalizedBorrowedAmount?._hex != "0x00"
+      ? address
+      : undefined
+  );
 
   useEffect(() => {
     const styledLoans = [];
@@ -253,7 +258,7 @@ export default function BasicTabs({}) {
           </div>
         </div>
         {
-          <div className=" p-sm my-auto self-center flex flex-col items-center">
+          <div className="w-full p-sm my-auto self-center flex flex-col items-center">
             <div className="w-full max-w-[250px] my-auto self-center">
               <SlideDeckButton
                 text="Borrow"
@@ -299,11 +304,13 @@ export default function BasicTabs({}) {
                 : "Borrow first"}
             </span>
             <span className="m-0 text-base text-almostWhite">
-              {userPoolState
-                ? userPoolState?.normalizedBorrowedAmount?._hex != "0x00"
-                  ? "0.0000001/second"
-                  : "Borrow first"
-                : "Borrow first"}
+              {userPoolState?.normalizedBorrowedAmount._hex.toString() === "0"
+                ? "Borrow First"
+                : flowInfo && flowInfo.flowRate !== "0"
+                ? formatEther(flowInfo.flowRate).toString().slice(0, 10) +
+                  "..." +
+                  "/sec"
+                : "Create a stream. You will default if you don't."}
             </span>
           </div>
         </div>

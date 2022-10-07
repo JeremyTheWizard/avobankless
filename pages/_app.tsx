@@ -19,7 +19,6 @@ import NavbarApp from "../components/navbar/NavbarApp";
 import { MaterialTheme } from "../MaterialTheme";
 import { store } from "../store/store";
 
-import { getDefaultProvider } from "ethers";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -43,12 +42,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   const config: Config = {
-    // readOnlyChainId: ArbitrumGoereli.chainId,
     readOnlyChainId: Goerli.chainId,
     readOnlyUrls: {
-      // [Hardhat.chainId]: "http://127.0.0.1:8545",
-      // [ArbitrumRinkeby.chainId]: "https://rinkeby.arbitrum.io/rpc",
-      [Goerli.chainId]: getDefaultProvider("goerli"),
+      [Goerli.chainId]: process.env.NEXT_PUBLIC_ETH_NODE_URI_GOERLI!,
     },
   };
 

@@ -10,8 +10,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import borrowerPools from "../../deployments/goerli/BorrowerPools.json";
 import token1 from "../../deployments/goerli/Token1.json";
-import useApprove from "../../hooks/useApprove";
 import useDeposit from "../../hooks/useDeposit";
+import useFDAIApprove from "../../hooks/useFDAIApprove";
 import { getBorrowState } from "../../slices/borrowSlice";
 import { getOthersSlice } from "../../slices/othersSlice";
 import InputAmountWithMaximum from "../general/InputAmountWithMaximum";
@@ -53,7 +53,8 @@ export default function WithdrawTabs({}) {
   const { account } = useEthers();
   const { selectedPool } = useSelector(getBorrowState);
   const { yieldProjection } = useSelector(getOthersSlice);
-  const { approve, approveState, resetApprove, approveEvents } = useApprove();
+  const { fDAIApprove, fDAIApproveState, fDAIResetApprove, fDAIApproveEvents } =
+    useFDAIApprove();
   const [amount, setAmount] = useState<BigNumber>();
   const [rate, setRate] = useState<BigNumber>();
   const [loading, setLoading] = useState(false);
@@ -62,18 +63,21 @@ export default function WithdrawTabs({}) {
   const [failureMessage, setFailureMessage] = useState("");
 
   useEffect(() => {
-    if (approveState.status === "Success") {
-      resetApprove();
+    if (fDAIApproveState.status === "Success") {
+      fDAIResetApprove();
       deposit(account, amount, rate, selectedPool, token1.address);
     }
-    if (approveState.status === "Fail" || approveState.status === "Exception") {
+    if (
+      fDAIApproveState.status === "Fail" ||
+      fDAIApproveState.status === "Exception"
+    ) {
       setFailureMessage(
-        approveState.errorMessage ?? "Oops, something went wrong"
+        fDAIApproveState.errorMessage ?? "Oops, something went wrong"
       );
       setLoading(false);
       setShowFailureAlert(true);
     }
-  }, [approveState]);
+  }, [fDAIApproveState]);
 
   useEffect(() => {
     if (depositState.status === "Success") {
@@ -99,7 +103,7 @@ export default function WithdrawTabs({}) {
     );
     setRate(rate);
 
-    approve(borrowerPools.address, amount);
+    fDAIApprove(borrowerPools.address, amount);
     setLoading(true);
   };
 

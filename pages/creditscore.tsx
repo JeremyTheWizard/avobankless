@@ -1,6 +1,6 @@
+import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 import Borrow from "../components/borrow.tsx/Borrow";
 import CreatePool from "../components/create-pool/CreatePool";
 import Tabs from "../components/credit-score/BasicTabs";
@@ -15,42 +15,41 @@ import { getCreatePoolSlice, toggleOpen } from "../slices/createPoolSlice";
 import { useDispatch, useSelector } from "../store/store";
 
 const CreditScore: React.FC = () => {
-  const { address } = useAccount();
+  const { account } = useEthers();
   const [creditScore, setCreditScore] = useState<Number | undefined>();
   const { loans } = useSelector(getCreatePoolSlice);
   const [openCreatePool, setOpenCreatePool] = useState(false);
   const dispatch = useDispatch();
-  console.log("loans", loans);
 
   const updateExistingWalletScore = useCallback(async () => {
-    if (address) {
+    if (account) {
       let score;
       try {
         score = await axios
-          .get(`api/creditscore/${address}`)
+          .get(`api/creditscore/${account}`)
           .then((res) => res.data.score);
       } catch (err) {
         return err;
       }
       setCreditScore(score);
     }
-  }, [address]);
+  }, [account]);
 
   // useEffect(() => {
   //   updateExistingWalletScore();
   // }, [updateExistingWalletScore]);
 
   useEffect(() => {
-    if (!address) {
+    if (!account) {
       setCreditScore(undefined);
     }
-  }, [!address]);
+  }, [!account]);
 
   const calculateWalletScore = async () => {
     let score;
     try {
       score = await axios
-        .post(`api/creditscore/${address}`)
+        .post(`api/creditscore/${account}`)
         .then((res) => res.data.score);
     } catch (err) {
       return err;
@@ -94,7 +93,7 @@ const CreditScore: React.FC = () => {
             </div>
           </GradientBox>
           <div className="w-11/12 mx-auto">
-            {loans === undefined && address && (
+            {loans === undefined && account && (
               <ScoreButton
                 onClick={() => dispatch(toggleOpen())}
                 text="Create Pool"
@@ -165,8 +164,8 @@ const CreditScore: React.FC = () => {
                 <div className="w-full max-w-xs">
                   <ScoreButton
                     text="Calculate Score"
-                    disabled={!address && true}
-                    tooltip={!address ? "Connect your wallet first" : ""}
+                    disabled={!account && true}
+                    tooltip={!account ? "Connect your wallet first" : ""}
                     onClick={() => calculateWalletScore()}
                   />
                 </div>
@@ -174,9 +173,9 @@ const CreditScore: React.FC = () => {
                   <SlideDeckButton
                     size="md"
                     text="Verify"
-                    disabled={(!address || !creditScore) && true}
+                    disabled={(!account || !creditScore) && true}
                     tooltip={
-                      !address
+                      account!
                         ? "Connect your wallet first"
                         : !creditScore
                         ? "Calculate your creditScore first"
@@ -207,7 +206,7 @@ const CreditScore: React.FC = () => {
               </div>
             </GradientBox>
             <div className="w-11/12 mx-auto">
-              {loans === undefined && address && (
+              {loans === undefined && account && (
                 <ScoreButton
                   onClick={() => setOpenCreatePool(true)}
                   text="Create Pool"

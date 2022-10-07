@@ -1,16 +1,14 @@
-import { useCall, useEthers } from "@usedapp/core";
-import { BigNumber, Contract, ethers } from "ethers";
-import borrowerPools from "../deployments/goerli/BorrowerPools.json";
+import { useCall } from "@usedapp/core";
+import { Contract, ethers } from "ethers";
+import deployments from "../deployments.json";
 
-function useGetPoolParameters(
-  tokenAddress: string | undefined
-): BigNumber | undefined {
+function useGetPoolParameters(account: string) {
+  const borrowerPools = deployments.contracts.BorrowerPools;
   const Interface = new ethers.utils.Interface(borrowerPools.abi);
-  const { account } = useEthers();
 
   const { value, error } =
     useCall(
-      tokenAddress && {
+      account && {
         contract: new Contract(borrowerPools.address, Interface),
         method: "getPoolParameters",
         args: [account],
@@ -20,7 +18,7 @@ function useGetPoolParameters(
     console.error(error.message);
     return undefined;
   }
-  return value?.[0];
+  return value ?? undefined;
 }
 
 export default useGetPoolParameters;

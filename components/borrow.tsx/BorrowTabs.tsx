@@ -44,29 +44,27 @@ export default function BorrowTabs({}) {
   const [earned, setEarned] = useState(0);
   const [available, setAvailable] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { borrow, borrowState, resetBorrowState, borrowEvents } = useBorrow();
+  const { borrow, borrowStatus, resetBorrowStatus } = useBorrow();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showFailureAlert, setShowFailureAlert] = useState(false);
   const [failureMessage, setFailureMessage] = useState("");
   const { address: account } = useAccount();
 
   useEffect(() => {
-    if (borrowState.status === "Success") {
+    if (borrowStatus === "Success") {
       setShowSuccessAlert(true);
       setLoading(false);
-      resetBorrowState();
+      resetBorrowStatus();
     }
-    if (borrowState.status === "Fail" || borrowState.status === "Exception") {
-      setFailureMessage(
-        borrowState.errorMessage ?? "Oops, something went wrong"
-      );
+    if (borrowStatus === "Fail" || borrowStatus === "Exception") {
+      setFailureMessage("Oops, something went wrong");
       setShowFailureAlert(true);
       setLoading(false);
-      resetBorrowState();
+      resetBorrowStatus();
     }
   }, [
-    borrowState,
-    resetBorrowState,
+    borrowStatus,
+    resetBorrowStatus,
     setShowFailureAlert,
     setLoading,
     setShowSuccessAlert,
@@ -80,7 +78,7 @@ export default function BorrowTabs({}) {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const amount = parseEther(String(e.target.amount.value));
-    borrow(account, amount);
+    borrow(amount.toString());
     setLoading(true);
   };
 
