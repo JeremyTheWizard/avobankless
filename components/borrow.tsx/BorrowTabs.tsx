@@ -2,13 +2,15 @@ import { Alert, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import { parseEther } from "ethers/lib/utils";
+import { useEthers } from "@usedapp/core";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 import useBorrow from "../../hooks/useBorrow";
-import WithdrawAmountInput from "../general/InputAmountWithMaximum";
+import useEstimateLoanRate from "../../hooks/useEstimateLoanRate";
+import useGetPoolState from "../../hooks/useGetPoolState";
 import ScoreButton from "../navbar/buttons/ScoreButton";
+import InputAmountWithMaximum from "./InputAmountWithMaximum";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,7 +50,17 @@ export default function BorrowTabs({}) {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showFailureAlert, setShowFailureAlert] = useState(false);
   const [failureMessage, setFailureMessage] = useState("");
-  const { address: account } = useAccount();
+  const { account } = useEthers();
+  const [normalizedBorrowedAmount, setNormalizedBorrowedAmount] = useState<
+    string | undefined
+  >();
+
+  const estimatedInterestRate = useEstimateLoanRate(
+    normalizedBorrowedAmount,
+    account
+  );
+
+  const poolState = useGetPoolState(account);
 
   useEffect(() => {
     if (borrowStatus === "Success") {
@@ -106,14 +118,17 @@ export default function BorrowTabs({}) {
         <TabPanel value={value} index={0}>
           <form onSubmit={onSubmit} className="space-y-md">
             <div className="space-y-md w-full">
-              <WithdrawAmountInput name="amount" />
+              <InputAmountWithMaximum
+                name="amount"
+                setNormalizedBorrowedAmount={setNormalizedBorrowedAmount}
+              />
             </div>
             <div className="flex justify-between w-full">
               <Typography variant="h6" component="span" className="font-bold">
-                AVG Interest
+                Estimated Interest Rate
               </Typography>
               <Typography variant="h6" component="span" className="font-bold">
-                {earned}
+                {estimatedInterestRate?.toString() ?? "---"}
               </Typography>
             </div>
             <div className="flex justify-between w-full">
@@ -121,7 +136,10 @@ export default function BorrowTabs({}) {
                 Available
               </Typography>
               <Typography variant="h6" component="span" className="font-bold">
-                {available}
+                DAI:{"  "}
+                {formatEther(
+                  poolState?.normalizedAvailableDeposits?.toString() ?? "0"
+                ) ?? "---"}
               </Typography>
             </div>
             <ScoreButton

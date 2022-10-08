@@ -42,15 +42,14 @@ function a11yProps(index: number) {
 
 export default function WithdrawTabs({}) {
   const [value, setValue] = useState(0);
-  const [earned, setEarned] = useState(0);
-  const [available, setAvailable] = useState(0);
+  const [earned, setEarned] = useState("---");
   const { withdraw, withdrawState, resetWithdraw, withdrawEvents } =
     useWithdraw();
   const [loading, setLoading] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showFailureAlert, setShowFailureAlert] = useState(false);
   const [failureMessage, setFailureMessage] = useState("");
-  const { selectedPosition } = useSelector(getWithdrawState);
+  const { selectedPositionInfo } = useSelector(getWithdrawState);
 
   useEffect(() => {
     if (withdrawState.status === "Success") {
@@ -84,7 +83,7 @@ export default function WithdrawTabs({}) {
   const onSubmitLiquidityTab = async (e: any) => {
     e.preventDefault();
     // const amount = parseEther(String(e.target.amountYieldProvider.value));
-    withdraw(selectedPosition);
+    withdraw(selectedPositionInfo.tokenId);
     setLoading(true);
   };
 
@@ -146,7 +145,7 @@ export default function WithdrawTabs({}) {
                 Available
               </Typography>
               <Typography variant="h6" component="span" className="font-bold">
-                {available}
+                {selectedPositionInfo?.available ?? "---"}
               </Typography>
             </div>
             <ScoreButton
@@ -176,7 +175,7 @@ export default function WithdrawTabs({}) {
                 Available
               </Typography>
               <Typography variant="h6" component="span" className="font-bold">
-                {available}
+                ---
               </Typography>
             </div>
             <ScoreButton

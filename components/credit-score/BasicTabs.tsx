@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import axios from "axios";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +10,10 @@ import useDeepCompareEffect from "use-deep-compare-effect";
 import { useAccount } from "wagmi";
 import positionManager from "../..//deployments/goerli/PositionManager.json";
 import useGetFlowInfo from "../../hooks/useGetFlowInfo";
+import useGetPoolAggregates from "../../hooks/useGetPoolAggregates";
 import useGetPoolState from "../../hooks/useGetPoolState";
 import useGetPositionsInfo from "../../hooks/useGetPositionsInfo";
+import useGetPositionsRepatriations from "../../hooks/useGetPositionsRepartitions";
 import dai from "../../public/dai.png";
 import { openBorrow } from "../../slices/borrowSlice";
 import { getCreatePoolSlice, setLoans } from "../../slices/createPoolSlice";
@@ -63,6 +65,10 @@ export default function BasicTabs({}) {
   const dispatch = useDispatch();
   const userPositionsInfo = useGetPositionsInfo(userTokenIds);
 
+  const poolAggregates = useGetPoolAggregates(address ?? "");
+
+  const positionRepartition = useGetPositionsRepatriations(userTokenIds);
+
   const getUserPositions = useCallback(async () => {
     if (!address) {
       setDeposits([]);
@@ -89,7 +95,6 @@ export default function BasicTabs({}) {
     await axios
       .request(options)
       .then(function (response) {
-        console.log(response.data);
         nfts = response.data.nfts;
       })
       .catch(function (error) {
@@ -128,17 +133,32 @@ export default function BasicTabs({}) {
               <img src={dai.src} alt="dai" className="m-0" />
               <h5>Dai</h5>
             </div>
-            <span className="text-base">{"0"}</span>
-            <span className="text-base">{"?"}</span>
+            <span className="text-base">0.0</span>
             <span className="text-base">
-              {formatEtherFromHEX(
-                userPositionsInfo[i]?.value?.adjustedBalance?._hex
+              {formatEther(
+                userPositionsInfo[i]?.value?.adjustedBalance?.toString()
+              )}
+            </span>
+            <span className="text-base">
+              {formatEther(
+                positionRepartition[
+                  i
+                ].value?.normalizedDepositedAmount?.toString()
               )}
             </span>
             <SlideDeckButton
               onClick={() => {
                 dispatch(openWithdraw());
-                dispatch(setSelectedPosition(userTokenIds[i]));
+                dispatch(
+                  setSelectedPosition({
+                    tokenId: userTokenIds[i],
+                    available: formatEther(
+                      positionRepartition[
+                        i
+                      ].value?.normalizedDepositedAmount?.toString()
+                    ),
+                  })
+                );
               }}
               text="Withdraw"
               size="sm"
@@ -162,6 +182,10 @@ export default function BasicTabs({}) {
 
   useEffect(() => {
     const styledLoans = [];
+    if (!poolAggregates) {
+      return;
+    }
+
     if (userPoolState) {
       if (userPoolState[0]) {
         styledLoans.push(
@@ -176,7 +200,13 @@ export default function BasicTabs({}) {
                   userPoolState?.normalizedAvailableDeposits?._hex
                 )}
               </span>
-              <span className="text-base">3%</span>
+              <span className="text-base">
+                {formatUnits(
+                  poolAggregates.weightedAverageLendingRate?.toString(),
+                  16
+                )}
+                %
+              </span>
               <span className="text-base">
                 {formatEtherFromHEX(
                   userPoolState?.normalizedBorrowedAmount?._hex
@@ -190,7 +220,7 @@ export default function BasicTabs({}) {
         dispatch(setLoans(undefined));
       }
     }
-  }, [userPoolState, dispatch]);
+  }, [userPoolState, dispatch, poolAggregates]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -275,11 +305,11 @@ export default function BasicTabs({}) {
             userPoolState?.normalizedAvailableDeposits?._hex != "0x00" ? (
               ""
             ) : loans?.length ? (
-              <span className="text-lg md:text-lg self-center my-auto p-sm">
+              <span className="text-lg md:text-lg self-center my-auto p-sm text-center">
                 Once someone deposits funds you will be able to borrow
               </span>
             ) : (
-              <span className="text-lg md:text-lg self-center my-auto p-sm">
+              <span className="text-lg md:text-lg self-center my-auto p-sm text-center">
                 Create a pool first to be able to borrow and see your loans.
               </span>
             )}
@@ -298,19 +328,20 @@ export default function BasicTabs({}) {
             <span className="m-0 text-base text-almostWhite">
               {userPoolState &&
               userPoolState?.normalizedBorrowedAmount?._hex != "0x00"
-                ? formatEtherFromHEX(
-                    userPoolState?.currentMaturity._hex ?? "---"
-                  )
+                ? new Date(
+                    userPoolState?.currentMaturity.toNumber() * 1000
+                  ).toLocaleDateString("en-US") ?? "---"
                 : "Borrow first"}
             </span>
             <span className="m-0 text-base text-almostWhite">
-              {userPoolState?.normalizedBorrowedAmount._hex.toString() === "0"
-                ? "Borrow First"
-                : flowInfo && flowInfo.flowRate !== "0"
-                ? formatEther(flowInfo.flowRate).toString().slice(0, 10) +
-                  "..." +
-                  "/sec"
-                : "Create a stream. You will default if you don't."}
+              {userPoolState &&
+              userPoolState?.normalizedBorrowedAmount?.toString() != "0"
+                ? flowInfo && flowInfo.flowRate !== "0"
+                  ? formatEther(flowInfo.flowRate).toString().slice(0, 10) +
+                    "..." +
+                    "/sec"
+                  : "Create a stream. You will default if you don't."
+                : "Borrow first"}
             </span>
           </div>
         </div>

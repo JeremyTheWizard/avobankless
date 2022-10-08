@@ -116,7 +116,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               theme={RainbowKitTheme}
               avatar={CustomAvatar}
             >
-              <div className=" bg-body h-screen">
+              <div className=" bg-body">
                 <div className="w-[95vw] max-w-[1536px] mx-auto pb-24 prose sm:prose-sm md:prose-base lg:prose-xl">
                   {currentRoute === "/" ? <Navbar /> : <NavbarApp />}
                   <Component {...pageProps} />

@@ -70,7 +70,7 @@ const CreditScore: React.FC = () => {
             </span>
           </h3>
           <p className="text-center">
-            Connect wallet for Check History, DeFi activity and Social Graph
+            Connect wallet to check your History, DeFi activity and Social Graph
           </p>
         </div>
         <div className="flex lg:hidden w-full flex-col gap-md col-span-6">

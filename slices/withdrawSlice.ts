@@ -3,13 +3,19 @@ import { createSlice } from "@reduxjs/toolkit";
 type Props = {
   withdraw: boolean;
   selectedPool: string;
-  selectedPosition: string;
+  selectedPositionInfo: {
+    tokenId: string;
+    available: string;
+  };
 };
 
 const initialState: Props = {
   withdraw: false,
   selectedPool: "",
-  selectedPosition: "",
+  selectedPositionInfo: {
+    tokenId: "",
+    available: "",
+  },
 };
 
 export const withdrawSlice = createSlice({
@@ -26,7 +32,7 @@ export const withdrawSlice = createSlice({
       state.selectedPool = action.payload;
     },
     setSelectedPosition: (state, action) => {
-      state.selectedPosition = action.payload;
+      state.selectedPositionInfo = action.payload;
     },
   },
 });
