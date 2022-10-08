@@ -32,7 +32,7 @@ const useCreateFlow = () => {
 
   const sender = account;
   const receiver = deployments.contracts.SuperfluidCallbacks.address;
-  const superToken = networkConfig[networkName ?? ""].sDAI ?? undefined;
+  const superToken = networkConfig[networkName ?? ""]?.sDAI ?? undefined;
 
   const createFlow = async (flowRate: string, loanAmount: string) => {
     const abi = defaultAbiCoder;

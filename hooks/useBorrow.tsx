@@ -48,7 +48,7 @@ const useBorrow = () => {
 
   const netWorkName = useGetNetworkName();
 
-  const sDAIAddress = networkConfig[netWorkName ?? ""].sDAI ?? undefined;
+  const sDAIAddress = networkConfig[netWorkName ?? ""]?.sDAI ?? undefined;
 
   // 3.
   useEffect(() => {

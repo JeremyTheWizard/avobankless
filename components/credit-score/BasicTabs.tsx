@@ -1,13 +1,15 @@
+import { Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
+import { MdOpenInNew } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import { useAccount } from "wagmi";
 import positionManager from "../..//deployments/goerli/PositionManager.json";
 import useGetFlowInfo from "../../hooks/useGetFlowInfo";
 import useGetPoolAggregates from "../../hooks/useGetPoolAggregates";
@@ -15,10 +17,19 @@ import useGetPoolState from "../../hooks/useGetPoolState";
 import useGetPositionsInfo from "../../hooks/useGetPositionsInfo";
 import useGetPositionsRepatriations from "../../hooks/useGetPositionsRepartitions";
 import dai from "../../public/dai.png";
-import { openBorrow } from "../../slices/borrowSlice";
+import { dispatchTotalBorrowed, openBorrow } from "../../slices/borrowSlice";
 import { getCreatePoolSlice, setLoans } from "../../slices/createPoolSlice";
-import { openWithdraw, setSelectedPosition } from "../../slices/withdrawSlice";
-import formatEtherFromHEX from "../../utils/formatEtherFromHEX";
+import {
+  dispatchUserDepositsTotal,
+  dispatchUserTokenIds,
+  getUserPositionsState,
+} from "../../slices/userPositionsSlice";
+import {
+  dispatchUserAvailableTotal,
+  openWithdraw,
+  setSelectedPosition,
+} from "../../slices/withdrawSlice";
+import formatEtherWithCustomDecimals from "../../utils/formatEtherWithCustomDecimals";
 import SlideDeckButton from "../navbar/buttons/SlideDeckButton";
 
 interface TabPanelProps {
@@ -57,30 +68,30 @@ function a11yProps(index: number) {
 
 export default function BasicTabs({}) {
   const [value, setValue] = useState(0);
-  const { address } = useAccount();
+  const { account } = useEthers();
   const { loans } = useSelector(getCreatePoolSlice);
   const [deposits, setDeposits] = useState<Array<JSX.Element>>([]);
-  const [userTokenIds, setUserTokenIds] = useState<string[]>([]);
+  const { userTokenIds } = useSelector(getUserPositionsState);
 
   const dispatch = useDispatch();
   const userPositionsInfo = useGetPositionsInfo(userTokenIds);
 
-  const poolAggregates = useGetPoolAggregates(address ?? "");
+  const poolAggregates = useGetPoolAggregates(account ?? "");
 
   const positionRepartition = useGetPositionsRepatriations(userTokenIds);
 
   const getUserPositions = useCallback(async () => {
-    if (!address) {
+    if (!account) {
       setDeposits([]);
       dispatch(setLoans([]));
-      setUserTokenIds([]);
+      dispatch(dispatchUserTokenIds([]));
 
       return;
     }
     let nfts: any;
     const options = {
       method: "GET",
-      url: `https://api.nftport.xyz/v0/accounts/${address}`,
+      url: `https://api.nftport.xyz/v0/accounts/${account}`,
       params: {
         chain: "goerli",
         contract_address: positionManager.address,
@@ -106,23 +117,35 @@ export default function BasicTabs({}) {
     for (let i = 0; i < nfts?.length; i++) {
       tokenIds.push(nfts[i].token_id);
     }
-    setUserTokenIds(tokenIds);
-  }, [address]);
+    dispatch(dispatchUserTokenIds(tokenIds));
+  }, [account]);
 
   useEffect(() => {
     getUserPositions();
   }, [getUserPositions]);
 
   useDeepCompareEffect(() => {
+    const styledDeposits: any = [];
     if (
       !userPositionsInfo.length ||
       userPositionsInfo.every((x) => x === undefined)
     ) {
+      setDeposits(styledDeposits);
       return;
     }
 
-    const styledDeposits = [];
+    let userDepositsTotal = 0;
+    let userAvailableTotal = 0;
     for (let i = 0; i < userPositionsInfo.length; i++) {
+      userDepositsTotal += parseFloat(
+        formatEther(userPositionsInfo[i]?.value?.adjustedBalance?.toString())
+      );
+      userAvailableTotal += parseFloat(
+        formatEther(
+          positionRepartition[i].value?.normalizedDepositedAmount?.toString()
+        )
+      );
+
       styledDeposits.push(
         <>
           <div
@@ -133,17 +156,19 @@ export default function BasicTabs({}) {
               <img src={dai.src} alt="dai" className="m-0" />
               <h5>Dai</h5>
             </div>
-            <span className="text-base">0.0</span>
+            <span className="text-base">0</span>
             <span className="text-base">
-              {formatEther(
-                userPositionsInfo[i]?.value?.adjustedBalance?.toString()
+              {formatEtherWithCustomDecimals(
+                userPositionsInfo[i]?.value?.adjustedBalance?.toString(),
+                0
               )}
             </span>
             <span className="text-base">
-              {formatEther(
+              {formatEtherWithCustomDecimals(
                 positionRepartition[
                   i
-                ].value?.normalizedDepositedAmount?.toString()
+                ].value?.normalizedDepositedAmount?.toString(),
+                0
               )}
             </span>
             <SlideDeckButton
@@ -152,10 +177,11 @@ export default function BasicTabs({}) {
                 dispatch(
                   setSelectedPosition({
                     tokenId: userTokenIds[i],
-                    available: formatEther(
+                    available: formatEtherWithCustomDecimals(
                       positionRepartition[
                         i
-                      ].value?.normalizedDepositedAmount?.toString()
+                      ].value?.normalizedDepositedAmount?.toString(),
+                      0
                     ),
                   })
                 );
@@ -168,26 +194,37 @@ export default function BasicTabs({}) {
         </>
       );
     }
+    dispatch(dispatchUserDepositsTotal(userDepositsTotal));
+    dispatch(dispatchUserAvailableTotal(userAvailableTotal));
     setDeposits(styledDeposits);
   }, [userPositionsInfo]);
 
   // Loans tab
-  const userPoolState = useGetPoolState(address ?? "");
+  const userPoolState = useGetPoolState(account ?? "");
 
   const flowInfo = useGetFlowInfo(
     userPoolState?.normalizedBorrowedAmount?._hex != "0x00"
-      ? address
+      ? account
       : undefined
   );
 
   useEffect(() => {
     const styledLoans = [];
     if (!poolAggregates) {
+      dispatch(setLoans(undefined));
       return;
     }
 
     if (userPoolState) {
       if (userPoolState[0]) {
+        dispatch(
+          dispatchTotalBorrowed(
+            formatEtherWithCustomDecimals(
+              userPoolState?.normalizedBorrowedAmount?.toString(),
+              0
+            )
+          )
+        );
         styledLoans.push(
           <>
             <div className="grid grid-cols-4 justify-items-center items-center">
@@ -196,7 +233,7 @@ export default function BasicTabs({}) {
                 <span className="text-base">DAI</span>
               </div>
               <span className="text-base">
-                {formatEtherFromHEX(
+                {formatEtherWithCustomDecimals(
                   userPoolState?.normalizedAvailableDeposits?._hex
                 )}
               </span>
@@ -208,7 +245,7 @@ export default function BasicTabs({}) {
                 %
               </span>
               <span className="text-base">
-                {formatEtherFromHEX(
+                {formatEtherWithCustomDecimals(
                   userPoolState?.normalizedBorrowedAmount?._hex
                 )}
               </span>
@@ -224,6 +261,10 @@ export default function BasicTabs({}) {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleGoTuSuperfluid = () => {
+    window.open("https://app.superfluid.finance/", "_blank");
   };
 
   return (
@@ -320,9 +361,17 @@ export default function BasicTabs({}) {
             <h6 className="m-0 text-base font-semibold text-almostWhite">
               Ends On
             </h6>
-            <h6 className="m-0 text-base font-semibold text-almostWhite">
-              Autopay
-            </h6>
+            <Tooltip title="manage your stream." placement="top">
+              <div
+                onClick={handleGoTuSuperfluid}
+                className="mx-auto flex gap-xs cursor-pointer"
+              >
+                <h6 className="m-0 text-base font-semibold text-almostWhite">
+                  Autopay
+                </h6>
+                <MdOpenInNew size="24" color="#FDFFFB" />
+              </div>
+            </Tooltip>
           </div>
           <div className="grid grid-cols-2 text-center w-full">
             <span className="m-0 text-base text-almostWhite">

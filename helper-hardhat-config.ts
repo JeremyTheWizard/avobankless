@@ -43,3 +43,4 @@ export const networkConfig: networkConfigInfo = {
 };
 
 export const developmentChains = ["hardhat", "localhost", "ganache"];
+export const supportedChainsIds = [5];

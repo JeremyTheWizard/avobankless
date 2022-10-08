@@ -8,7 +8,7 @@ import cashMan from "../public/cashMan.jpeg";
 import creditScore from "../public/credit-score.png";
 import homepage from "../public/homepage.jpg";
 import lend from "../public/lend.png";
-import superfluid from "../public/superfluid.png";
+import superfluid from "../public/superfluid-stream.gif";
 
 import Carousel from "../components/general/Carousel";
 import GradientBox from "../components/general/GradientBox";
@@ -76,7 +76,7 @@ const Home: NextPage = () => {
             />
           </div>
         </section>
-        <section className="hidden lg:grid grid-cols-3 justify-center gap-md prose-img:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite ">
+        <section className="relative hidden lg:grid grid-cols-3 justify-center gap-md prose-img:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite">
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
             <img
               src={borrow.src}
@@ -91,7 +91,7 @@ const Home: NextPage = () => {
             <img
               src={superfluid.src}
               alt="superfluid stream of money"
-              className="w-32 h-32 absolute -right-20 "
+              className="w-32 h-24 absolute -right-20"
             />
           </GradientBox>
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
@@ -104,7 +104,7 @@ const Home: NextPage = () => {
             <img
               src={superfluid.src}
               alt="superfluid stream of money"
-              className="w-32 h-32 absolute -right-20 "
+              className="w-32 h-24 absolute -right-20 "
             />
           </GradientBox>
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>

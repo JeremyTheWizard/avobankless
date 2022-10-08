@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 type Props = {
   borrow: boolean;
   selectedPool: string;
+  userTotalBorrowed: number | undefined;
 };
 
 const initialState: Props = {
   borrow: false,
   selectedPool: "",
+  userTotalBorrowed: undefined,
 };
 
 export const borrowSlice = createSlice({
@@ -23,6 +25,9 @@ export const borrowSlice = createSlice({
     setSelectedPool: (state, action) => {
       state.selectedPool = action.payload;
     },
+    dispatchTotalBorrowed: (state, action) => {
+      state.userTotalBorrowed = action.payload;
+    },
   },
 });
 
@@ -31,6 +36,11 @@ export const getBorrowState = (state: { borrowSlice: Props }) =>
   state.borrowSlice;
 
 // Exports all actions
-export const { openBorrow, closeBorrow, setSelectedPool } = borrowSlice.actions;
+export const {
+  openBorrow,
+  closeBorrow,
+  setSelectedPool,
+  dispatchTotalBorrowed,
+} = borrowSlice.actions;
 
 export default borrowSlice.reducer;

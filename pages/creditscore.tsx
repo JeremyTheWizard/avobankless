@@ -11,7 +11,10 @@ import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 import TestFaucet from "../components/testFaucet";
 import Withdraw from "../components/withdraw/Withdraw";
+import { getBorrowState } from "../slices/borrowSlice";
 import { getCreatePoolSlice, toggleOpen } from "../slices/createPoolSlice";
+import { getUserPositionsState } from "../slices/userPositionsSlice";
+import { getWithdrawState } from "../slices/withdrawSlice";
 import { useDispatch, useSelector } from "../store/store";
 
 const CreditScore: React.FC = () => {
@@ -20,6 +23,9 @@ const CreditScore: React.FC = () => {
   const { loans } = useSelector(getCreatePoolSlice);
   const [openCreatePool, setOpenCreatePool] = useState(false);
   const dispatch = useDispatch();
+  const { userDepositsTotal } = useSelector(getUserPositionsState);
+  const { userTotalBorrowed } = useSelector(getBorrowState);
+  const { userAvailableTotal } = useSelector(getWithdrawState);
 
   const updateExistingWalletScore = useCallback(async () => {
     if (account) {
@@ -81,11 +87,11 @@ const CreditScore: React.FC = () => {
             </div>
             <div className="flex flex-col gap-sm">
               <h5>Deposits</h5>
-              <h5 className="font-bold">$0</h5>
+              <h5 className="font-bold">${userDepositsTotal ?? "0"}</h5>
             </div>
             <div className="flex flex-col gap-sm">
               <h5>Borrowed</h5>
-              <h5 className="font-bold">$0</h5>
+              <h5 className="font-bold">${userTotalBorrowed ?? "0"}</h5>
             </div>
             <div className="flex flex-col gap-sm">
               <h5>Loans</h5>
@@ -189,20 +195,20 @@ const CreditScore: React.FC = () => {
           <div className="hidden lg:flex w-full flex-col gap-md col-span-6">
             <GradientBox twProps="prose-h5:m-0 ">
               <div className="flex flex-col gap-sm">
-                <h5>Balance</h5>
+                <h5>Earned</h5>
                 <h5 className="font-bold">$0</h5>
+              </div>
+              <div className="flex flex-col gap-sm">
+                <h5>Available</h5>
+                <h5 className="font-bold">${userAvailableTotal ?? "0"}</h5>
               </div>
               <div className="flex flex-col gap-sm">
                 <h5>Deposits</h5>
-                <h5 className="font-bold">$0</h5>
+                <h5 className="font-bold">${userDepositsTotal ?? "0"}</h5>
               </div>
               <div className="flex flex-col gap-sm">
                 <h5>Borrowed</h5>
-                <h5 className="font-bold">$0</h5>
-              </div>
-              <div className="flex flex-col gap-sm">
-                <h5>Loans</h5>
-                <h5 className="font-bold">$0</h5>
+                <h5 className="font-bold">${userTotalBorrowed ?? "0"}</h5>
               </div>
             </GradientBox>
             <div className="w-11/12 mx-auto">

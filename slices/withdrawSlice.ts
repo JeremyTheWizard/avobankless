@@ -7,6 +7,7 @@ type Props = {
     tokenId: string;
     available: string;
   };
+  userAvailableTotal: string | undefined;
 };
 
 const initialState: Props = {
@@ -16,6 +17,7 @@ const initialState: Props = {
     tokenId: "",
     available: "",
   },
+  userAvailableTotal: undefined,
 };
 
 export const withdrawSlice = createSlice({
@@ -34,6 +36,9 @@ export const withdrawSlice = createSlice({
     setSelectedPosition: (state, action) => {
       state.selectedPositionInfo = action.payload;
     },
+    dispatchUserAvailableTotal: (state, action) => {
+      state.userAvailableTotal = action.payload;
+    },
   },
 });
 
@@ -47,6 +52,7 @@ export const {
   closeWithdraw,
   setSelectedPool,
   setSelectedPosition,
+  dispatchUserAvailableTotal,
 } = withdrawSlice.actions;
 
 export default withdrawSlice.reducer;

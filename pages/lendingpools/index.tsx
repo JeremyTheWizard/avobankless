@@ -13,7 +13,7 @@ import useGetPoolsInfo from "../../hooks/useGetPoolsInfo";
 import coin from "../../public/coin.png";
 import dai from "../../public/dai.png";
 import { setSelectedPool } from "../../slices/borrowSlice";
-import formatEtherFromHEX from "../../utils/formatEtherFromHEX";
+import formatEtherFromHEX from "../../utils/formatEtherWithCustomDecimals";
 import { processCreditScore } from "../../utils/processRawCreditScore";
 
 const LendingPools: NextPage = () => {

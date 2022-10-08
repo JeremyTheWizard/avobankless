@@ -1,5 +1,6 @@
 import { Framework } from "@superfluid-finance/sdk-core";
 import { useEthers } from "@usedapp/core";
+import { supportedChainsIds } from "../helper-hardhat-config";
 
 const useGetSF = () => {
   const { library, chainId } = useEthers();
@@ -10,10 +11,12 @@ const useGetSF = () => {
       return;
     }
 
-    return Framework.create({
-      chainId: chainId ?? 5, // defaults to goerli
-      provider: library,
-    });
+    if (supportedChainsIds.includes(chainId ?? 0)) {
+      return Framework.create({
+        chainId: chainId ?? 5, // defaults to goerli
+        provider: library,
+      });
+    }
   };
 
   return getSF;

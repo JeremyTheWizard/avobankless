@@ -7,6 +7,7 @@ import borrowSlice from "../slices/borrowSlice";
 import createPoolSlice from "../slices/createPoolSlice";
 import creditScoreDialogSlice from "../slices/creditScoreDialogSlice";
 import othersSlice from "../slices/othersSlice";
+import userPositionsSlice from "../slices/userPositionsSlice";
 import withdrawSlice from "../slices/withdrawSlice";
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
     borrowSlice: borrowSlice,
     createPoolSlice: createPoolSlice,
     othersSlice: othersSlice,
+    userPositionsSlice: userPositionsSlice,
   },
 });
 
