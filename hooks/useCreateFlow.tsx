@@ -1,4 +1,5 @@
 import { useEthers } from "@usedapp/core";
+import { ethers } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import { useState } from "react";
 import deployments from "../deployments.json";
@@ -20,9 +21,12 @@ const useCreateFlow = () => {
   // resources
   const networkName = useGetNetworkName();
   const [createFlowStatus, setCreateFlowStatus] = useState("None");
-  const { library } = useEthers();
 
-  const signer = library?.getSigner();
+  let provider: ethers.providers.Web3Provider | undefined;
+  if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+    provider = new ethers.providers.Web3Provider(window.ethereum as any);
+  }
+  const signer = provider?.getSigner();
 
   // 1.
   const getSF = useGetSF();

@@ -1,5 +1,5 @@
 import { Framework, IWeb3FlowInfo } from "@superfluid-finance/sdk-core";
-import { useEthers } from "@usedapp/core";
+import { ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import deployments from "../deployments.json";
 import { networkConfig } from "../helper-hardhat-config";
@@ -15,7 +15,13 @@ const useGetFlowInfo = (account: string | undefined) => {
 
   // resources
   const networkName = useGetNetworkName();
-  const { library } = useEthers();
+
+  let provider: ethers.providers.Web3Provider | undefined;
+  if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+    provider = new ethers.providers.Web3Provider(window.ethereum as any);
+  }
+  const signer = provider?.getSigner();
+
   const getSF = useGetSF();
   const [sf, setSF] = useState<Framework | undefined>();
   const [flowInfo, setFlowInfo] = useState<IWeb3FlowInfo | undefined>();
@@ -33,14 +39,13 @@ const useGetFlowInfo = (account: string | undefined) => {
     //1.
     const sf = await getSF();
 
-    if (!account || !sf || !networkName || !library) {
+    if (!account || !sf || !networkName || !signer) {
       return;
     }
 
     const superToken = networkConfig[networkName].sDAI ?? "";
     const sender = account;
     const receiver = deployments.contracts.SuperfluidCallbacks.address;
-    const signer = library.getSigner();
 
     if (!superToken) {
       alert("Error getting superToken");
@@ -59,7 +64,7 @@ const useGetFlowInfo = (account: string | undefined) => {
     } catch (e) {
       return e;
     }
-  }, [account, library, networkName, sf]);
+  }, [account, signer, networkName, sf]);
 
   useEffect(() => {
     getFlowRate();

@@ -1,4 +1,4 @@
-import { useEthers } from "@usedapp/core";
+import { ethers } from "ethers";
 import { useState } from "react";
 import { networkConfig } from "../helper-hardhat-config";
 import useGetNetworkName from "./useGetNeworkName";
@@ -17,9 +17,13 @@ const useFDAIUpgrade = () => {
 
   // resources
   const networkName = useGetNetworkName();
-  const { library } = useEthers();
   const [fDAIUpgradeStatus, setFDAIUpgradeStatus] = useState("None");
   const getSF = useGetSF();
+  let provider: ethers.providers.Web3Provider | undefined;
+  if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+    provider = new ethers.providers.Web3Provider(window.ethereum as any);
+  }
+  const signer = provider?.getSigner();
 
   const fDAIUpgrade = async (amount: string) => {
     //1.
@@ -39,10 +43,10 @@ const useFDAIUpgrade = () => {
     const upgradeOperation = sDAI.upgrade({
       amount: amount,
     });
-    if (library) {
+    if (signer) {
       try {
         setFDAIUpgradeStatus("Pending Signature");
-        const txnResponse = await upgradeOperation.exec(library.getSigner());
+        const txnResponse = await upgradeOperation.exec(signer);
         setFDAIUpgradeStatus("Mining");
         await txnResponse.wait();
         setFDAIUpgradeStatus("Success");

@@ -29,6 +29,9 @@ const LendingPools: NextPage = () => {
   const poolsAggregates = useGetPoolsAggregates(poolsAddresses);
 
   const getLendingPools = useCallback(() => {
+    console.log("lendingPoolsFetched.current ", lendingPoolsFetched.current);
+    console.log("poolsInfo ", poolsInfo);
+    console.log("poolsAggregates ", poolsAggregates);
     if (lendingPoolsFetched.current) {
       // to avoid re-rendering and changing the random credit scores values
       return;
@@ -102,6 +105,7 @@ const LendingPools: NextPage = () => {
           />
         </>
       );
+      console.log("styledLendingPools ", styledLendingPools);
       setLendingPools(styledLendingPools);
       lendingPoolsFetched.current = true;
     }

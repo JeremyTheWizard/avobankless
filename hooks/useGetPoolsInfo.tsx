@@ -1,8 +1,9 @@
 import { useCalls } from "@usedapp/core";
 import { Contract, utils } from "ethers";
-import borrowerPools from "../deployments/goerli/BorrowerPools.json";
+import deployments from "../deployments.json";
 
 const useGetPoolsInfo = (poolAddresses: string[]) => {
+  const borrowerPools = deployments.contracts.BorrowerPools;
   const calls =
     poolAddresses?.map((address) => ({
       contract: new Contract(

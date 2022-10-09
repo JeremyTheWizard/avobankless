@@ -1,4 +1,3 @@
-import { useEthers } from "@usedapp/core";
 import { ethers } from "ethers";
 import { networkConfig } from "../helper-hardhat-config";
 import useGetNetworkName from "./useGetNeworkName";
@@ -13,7 +12,11 @@ const useGetSDAIBalance = () => {
 
   // resources
   const networkName = useGetNetworkName();
-  const { library } = useEthers();
+  let provider: ethers.providers.Web3Provider | undefined;
+  if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+    provider = new ethers.providers.Web3Provider(window.ethereum as any);
+  }
+  const signer = provider?.getSigner();
   const getSF = useGetSF();
 
   const getSDAIBalance = async (account: string) => {
@@ -29,9 +32,12 @@ const useGetSDAIBalance = () => {
     );
 
     //3.
+    if (!signer) {
+      return;
+    }
     try {
       const sDAIBalance = await sDAI.balanceOf({
-        providerOrSigner: library?.getSigner() as ethers.Signer,
+        providerOrSigner: signer,
         account: account,
       });
       return sDAIBalance;

@@ -6,7 +6,8 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 
-import { Chain, Config, DAppProvider, Goerli } from "@usedapp/core";
+import { Config, DAppProvider, Goerli } from "@usedapp/core";
+import { getDefaultProvider } from "ethers";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { Provider } from "react-redux";
@@ -25,33 +26,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const currentRoute = router.pathname;
 
-  const ArbitrumGoereli: Chain = {
-    chainId: 421613,
-    chainName: "Arbitrum Nitro",
-    isTestChain: true,
-    isLocalChain: false,
-    multicallAddress: "0xF0B2fe7A6981427C586764Cc52583AdB4aBAB3A3",
-    rpcUrl: "https://goerli-rollup.arbitrum.io/rpc/",
-    blockExplorerUrl: "https://goerli-rollup-explorer.arbitrum.io",
-    getExplorerAddressLink(address: string) {
-      return `https://goerli-rollup-explorer.arbitrum.io/address/${address}`;
-    },
-    getExplorerTransactionLink(transactionHash: string) {
-      return `https://goerli-rollup-explorer.arbitrum.io/tx/${transactionHash}`;
-    },
-  };
-
   const config: Config = {
     readOnlyChainId: Goerli.chainId,
     readOnlyUrls: {
-      [Goerli.chainId]: process.env.NEXT_PUBLIC_ETH_NODE_URI_GOERLI!,
+      [Goerli.chainId]: getDefaultProvider("goerli"),
     },
   };
 
   const { chains, provider, webSocketProvider } = configureChains(
     [
-      // chain.arbitrumGoerli,
-      // chain.arbitrumRinkeby,
       chain.goerli,
       ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
         ? [chain.goerli]
@@ -60,7 +43,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     [
       alchemyProvider({
         // This is Alchemy's default API key.
-        // You can get your own at https://dashboard.alchemyapi.io
         apiKey: "aCqen3L7WkFxk3q30VBgAiuS03nEAbx4",
       }),
       publicProvider(),
