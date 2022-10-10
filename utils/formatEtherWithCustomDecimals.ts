@@ -1,11 +1,13 @@
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 
-const formatEtherFromHEX = (
+const formatEtherWithCustomDecimals = (
   bigNumber: BigNumber,
   decimals: number = 0
-): string => {
+): string | undefined => {
+  if (!BigNumber.isBigNumber(bigNumber)) return undefined;
+
   return Number(formatEther(bigNumber.toString())).toFixed(decimals);
 };
 
-export default formatEtherFromHEX;
+export default formatEtherWithCustomDecimals;

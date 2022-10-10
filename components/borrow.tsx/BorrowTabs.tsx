@@ -3,12 +3,14 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { useEthers } from "@usedapp/core";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import useBorrow from "../../hooks/useBorrow";
 import useEstimateLoanRate from "../../hooks/useEstimateLoanRate";
+import useGetPoolParameters from "../../hooks/useGetPoolParameters";
 import useGetPoolState from "../../hooks/useGetPoolState";
+import useGetRepaymentAmount from "../../hooks/useGetRepaymentAmount";
 import ScoreButton from "../navbar/buttons/ScoreButton";
 import InputAmountWithMaximum from "./InputAmountWithMaximum";
 
@@ -43,8 +45,6 @@ function a11yProps(index: number) {
 
 export default function BorrowTabs({}) {
   const [value, setValue] = useState(0);
-  const [earned, setEarned] = useState(0);
-  const [available, setAvailable] = useState(0);
   const [loading, setLoading] = useState(false);
   const { borrow, borrowStatus, resetBorrowStatus } = useBorrow();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -54,6 +54,7 @@ export default function BorrowTabs({}) {
   const [normalizedBorrowedAmount, setNormalizedBorrowedAmount] = useState<
     string | undefined
   >();
+  const repaymentAmount = useGetRepaymentAmount(normalizedBorrowedAmount);
 
   const estimatedInterestRate = useEstimateLoanRate(
     normalizedBorrowedAmount,
@@ -61,6 +62,7 @@ export default function BorrowTabs({}) {
   );
 
   const poolState = useGetPoolState(account);
+  const poolParameters = useGetPoolParameters(account);
 
   useEffect(() => {
     if (borrowStatus === "Success") {
@@ -116,6 +118,22 @@ export default function BorrowTabs({}) {
         </Box>
 
         <TabPanel value={value} index={0}>
+          <p>
+            <span className="font-bold">IMPORTANT:</span> To borrow you will
+            start an auto repayment stream. Tokens will be streamed from your
+            account to the protocol each second.
+            <br />
+            <br />
+            <span className="underline">
+              Please ensure you have enough super DAI(DAIx) at all moments
+            </span>{" "}
+            to make the minimum payments. Otherwise, you will be{" "}
+            <span className="text-darkishRed">
+              liquidated, penalized and additional fees will be accrued.
+            </span>
+            <br />
+            <br />
+          </p>
           <form onSubmit={onSubmit} className="space-y-md">
             <div className="space-y-md w-full">
               <InputAmountWithMaximum
@@ -125,21 +143,38 @@ export default function BorrowTabs({}) {
             </div>
             <div className="flex justify-between w-full">
               <Typography variant="h6" component="span" className="font-bold">
-                Estimated Interest Rate
+                DAI Available
               </Typography>
               <Typography variant="h6" component="span" className="font-bold">
-                {estimatedInterestRate?.toString() ?? "---"}
+                {formatEther(
+                  poolState?.normalizedAvailableDeposits?.toString() ?? "0"
+                ) ?? "---"}
               </Typography>
             </div>
             <div className="flex justify-between w-full">
               <Typography variant="h6" component="span" className="font-bold">
-                Available
+                Interest Rate Aprox.
               </Typography>
               <Typography variant="h6" component="span" className="font-bold">
-                DAI:{"  "}
-                {formatEther(
-                  poolState?.normalizedAvailableDeposits?.toString() ?? "0"
-                ) ?? "---"}
+                {(
+                  estimatedInterestRate &&
+                  Number(formatUnits(estimatedInterestRate.toString(), 16))
+                )?.toFixed(2) ?? "---"}{" "}
+                %
+              </Typography>
+            </div>
+            <div className="flex justify-between w-full">
+              <Typography variant="h6" component="span" className="font-bold">
+                Autopay
+              </Typography>
+              <Typography variant="h6" component="span" className="font-bold">
+                {(
+                  repaymentAmount &&
+                  poolParameters &&
+                  parseInt(repaymentAmount.toString()) /
+                    parseInt(poolParameters.loanDuration.toString())
+                )?.toFixed(10) ?? "---"}
+                /sec
               </Typography>
             </div>
             <ScoreButton

@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { NextPage } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,7 +14,7 @@ import useGetPoolsInfo from "../../hooks/useGetPoolsInfo";
 import coin from "../../public/coin.png";
 import dai from "../../public/dai.png";
 import { setSelectedPool } from "../../slices/borrowSlice";
-import formatEtherFromHEX from "../../utils/formatEtherWithCustomDecimals";
+import formatEtherWithCustomDecimals from "../../utils/formatEtherWithCustomDecimals";
 import { processCreditScore } from "../../utils/processRawCreditScore";
 
 const LendingPools: NextPage = () => {
@@ -29,9 +30,6 @@ const LendingPools: NextPage = () => {
   const poolsAggregates = useGetPoolsAggregates(poolsAddresses);
 
   const getLendingPools = useCallback(() => {
-    console.log("lendingPoolsFetched.current ", lendingPoolsFetched.current);
-    console.log("poolsInfo ", poolsInfo);
-    console.log("poolsAggregates ", poolsAggregates);
     if (lendingPoolsFetched.current) {
       // to avoid re-rendering and changing the random credit scores values
       return;
@@ -68,8 +66,8 @@ const LendingPools: NextPage = () => {
             <span className="text-base">DAI</span>
           </div>
           <span className="text-base">
-            {formatEtherFromHEX(
-              poolsInfo[i]?.value?.normalizedAvailableDeposits?._hex
+            {formatEtherWithCustomDecimals(
+              poolsInfo[i]?.value?.normalizedAvailableDeposits
             ) ?? ""}
           </span>
           <span className="text-base">
@@ -105,7 +103,6 @@ const LendingPools: NextPage = () => {
           />
         </>
       );
-      console.log("styledLendingPools ", styledLendingPools);
       setLendingPools(styledLendingPools);
       lendingPoolsFetched.current = true;
     }
@@ -145,7 +142,10 @@ const LendingPools: NextPage = () => {
           <h6 className="text-darkGreen capitalize">Yearn APY</h6>
           <h6 className="text-darkGreen capitalize">CS</h6>
           <div></div>
-          {lendingPools && lendingPools}
+          {lendingPools.length && lendingPools}
+        </div>
+        <div className="z-[9999]">
+          {!lendingPools.length && <CircularProgress />}
         </div>
       </GradientBorder>
       <Deposit openBorrow={openBorrow} setOpenBorrow={setOpenBorrow} />

@@ -2,7 +2,7 @@ import { useCall } from "@usedapp/core";
 import { Contract, ethers } from "ethers";
 import deployments from "../deployments.json";
 
-function useGetPoolParameters(account: string) {
+function useGetPoolParameters(account: string | undefined) {
   const borrowerPools = deployments.contracts.BorrowerPools;
   const Interface = new ethers.utils.Interface(borrowerPools.abi);
 

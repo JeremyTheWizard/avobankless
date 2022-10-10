@@ -1,7 +1,7 @@
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import dai from "../../public/dai.png";
 
 type Props = {
@@ -85,13 +85,22 @@ const WithdrawAmountInput: FC<Props> = ({
   disabledText,
   setNormalizedBorrowedAmount,
 }) => {
-  const [value, setValue] = useState<string | number>();
+  const [value, setValue] = useState<string | undefined>();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
-    setNormalizedBorrowedAmount &&
-      setNormalizedBorrowedAmount(event.target.value);
   };
+
+  useEffect(() => {
+    if (!setNormalizedBorrowedAmount || !value) {
+      return;
+    }
+    const timeOutId = setTimeout(
+      () => setNormalizedBorrowedAmount(value),
+      1000
+    );
+    return () => clearTimeout(timeOutId);
+  }, [value]);
 
   return (
     <Search disabled={disabled} disabledText={disabledText}>

@@ -6,7 +6,7 @@ import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
 import borrow from "../public/borrow.png";
 import cashMan from "../public/cashMan.jpeg";
 import creditScore from "../public/credit-score.png";
-import homepage from "../public/homepage.jpg";
+import imBankless from "../public/im-bankless.gif";
 import lend from "../public/lend.png";
 import superfluid from "../public/superfluid-stream.gif";
 
@@ -70,14 +70,16 @@ const Home: NextPage = () => {
           </div>
           <div className="hidden md:block">
             <img
-              src={homepage.src}
+              src={imBankless.src}
               alt="representation of the protocol"
               className="w-full object-fit"
             />
           </div>
         </section>
         <section className="relative hidden lg:grid grid-cols-3 justify-center gap-md prose-img:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite">
-          <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
+          <GradientBox
+            twProps={"flex-col items-center relative gap-sm pb-14 relative"}
+          >
             <img
               src={borrow.src}
               alt="Hand holding coin"
@@ -91,7 +93,7 @@ const Home: NextPage = () => {
             <img
               src={superfluid.src}
               alt="superfluid stream of money"
-              className="w-32 h-24 absolute -right-20"
+              className="w-20 h-28 absolute -right-20"
             />
           </GradientBox>
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
@@ -99,12 +101,12 @@ const Home: NextPage = () => {
             <h2>Lend with Autopay</h2>
             <p>
               Take advantage of payment streams to automatically amortize loans
-              with consistent returns, always with liquidity.
+              with consistent returns. Always with liquidity.
             </p>
             <img
               src={superfluid.src}
               alt="superfluid stream of money"
-              className="w-32 h-24 absolute -right-20 "
+              className="w-20 h-28 absolute -right-20 "
             />
           </GradientBox>
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>

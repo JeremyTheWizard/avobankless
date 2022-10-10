@@ -159,15 +159,13 @@ export default function BasicTabs({}) {
             <span className="text-base">0</span>
             <span className="text-base">
               {formatEtherWithCustomDecimals(
-                userPositionsInfo[i]?.value?.adjustedBalance?.toString(),
+                userPositionsInfo[i]?.value?.adjustedBalance,
                 0
               )}
             </span>
             <span className="text-base">
               {formatEtherWithCustomDecimals(
-                positionRepartition[
-                  i
-                ].value?.normalizedDepositedAmount?.toString(),
+                positionRepartition[i].value?.normalizedDepositedAmount,
                 0
               )}
             </span>
@@ -178,9 +176,7 @@ export default function BasicTabs({}) {
                   setSelectedPosition({
                     tokenId: userTokenIds[i],
                     available: formatEtherWithCustomDecimals(
-                      positionRepartition[
-                        i
-                      ].value?.normalizedDepositedAmount?.toString(),
+                      positionRepartition[i].value?.normalizedDepositedAmount,
                       0
                     ),
                   })
@@ -211,7 +207,7 @@ export default function BasicTabs({}) {
   useEffect(() => {
     const styledLoans = [];
     if (!poolAggregates) {
-      dispatch(setLoans(undefined));
+      dispatch(setLoans([]));
       return;
     }
 
@@ -220,7 +216,7 @@ export default function BasicTabs({}) {
         dispatch(
           dispatchTotalBorrowed(
             formatEtherWithCustomDecimals(
-              userPoolState?.normalizedBorrowedAmount?.toString(),
+              userPoolState?.normalizedBorrowedAmount,
               0
             )
           )
@@ -234,7 +230,7 @@ export default function BasicTabs({}) {
               </div>
               <span className="text-base">
                 {formatEtherWithCustomDecimals(
-                  userPoolState?.normalizedAvailableDeposits?._hex
+                  userPoolState?.normalizedAvailableDeposits
                 )}
               </span>
               <span className="text-base">
@@ -246,7 +242,7 @@ export default function BasicTabs({}) {
               </span>
               <span className="text-base">
                 {formatEtherWithCustomDecimals(
-                  userPoolState?.normalizedBorrowedAmount?._hex
+                  userPoolState?.normalizedBorrowedAmount
                 )}
               </span>
             </div>

@@ -99,7 +99,7 @@ const CreditScore: React.FC = () => {
             </div>
           </GradientBox>
           <div className="w-11/12 mx-auto">
-            {loans === undefined && account && (
+            {loans && !loans.length && account && (
               <ScoreButton
                 onClick={() => dispatch(toggleOpen())}
                 text="Create Pool"

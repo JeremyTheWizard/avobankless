@@ -2,6 +2,7 @@ import { Alert } from "@mui/material";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import { parseEther } from "ethers/lib/utils";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -11,13 +12,12 @@ import {
   establishmentFeeRate,
   lateRepayFeePerBondRate,
   liquidityRewardsActivationThreshold,
-  loanDuration,
-  maxBorrowableAmount,
   maxRateInput,
   minRateInput,
   rateSpacingInput,
   repaymentFeeRate,
   repaymentPeriod,
+  secondsPerDay,
 } from "../../constants";
 import token1 from "../../deployments/goerli/Token1.json";
 import yearnFinanceWrapper from "../../deployments/goerli/YearnFinanceWrapper.json";
@@ -122,8 +122,8 @@ export default function WithdrawTabs({}) {
       minRate: minRateInput,
       maxRate: maxRateInput,
       rateSpacing: rateSpacingInput,
-      maxBorrowableAmount: maxBorrowableAmount, //parseEther(String(e.target.maximumBorrowable.value)),
-      loanDuration: loanDuration, //e.target.loanDuration.value,
+      maxBorrowableAmount: parseEther(String(e.target.maximumBorrowable.value)),
+      loanDuration: e.target.loanDuration.value * secondsPerDay,
       distributionRate: distributionRate,
       cooldownPeriod: cooldownPeriod,
       repaymentPeriod: repaymentPeriod,
@@ -179,7 +179,7 @@ export default function WithdrawTabs({}) {
               text="Create"
               twProps="!w-full mt-lg"
               loading={loading}
-              disabled={loading}
+              disabled={loading && createNewPoolState.status != "Success"}
             />
           </form>
         </TabPanel>

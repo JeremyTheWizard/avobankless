@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { BigNumber } from "ethers";
 
 type Props = {
   borrow: boolean;
   selectedPool: string;
   userTotalBorrowed: number | undefined;
+  repaymentAmount: BigNumber | undefined;
 };
 
 const initialState: Props = {
   borrow: false,
   selectedPool: "",
   userTotalBorrowed: undefined,
+  repaymentAmount: undefined,
 };
 
 export const borrowSlice = createSlice({
@@ -28,6 +31,9 @@ export const borrowSlice = createSlice({
     dispatchTotalBorrowed: (state, action) => {
       state.userTotalBorrowed = action.payload;
     },
+    dispatchRepaymentAmount: (state, action) => {
+      state.repaymentAmount = action.payload;
+    },
   },
 });
 
@@ -41,6 +47,7 @@ export const {
   closeBorrow,
   setSelectedPool,
   dispatchTotalBorrowed,
+  dispatchRepaymentAmount,
 } = borrowSlice.actions;
 
 export default borrowSlice.reducer;
