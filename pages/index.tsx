@@ -67,6 +67,17 @@ const Home: NextPage = () => {
                 />
               </div>
             </div>
+            <p
+              onClick={() =>
+                window.open(
+                  "https://github.com/avobankless/litepaper-v1/blob/main/Avobankless%20Litepaper%20v1.pdf",
+                  "_blank"
+                )
+              }
+              className="!mt-sm underline pl-xs font-medium cursor-pointer"
+            >
+              Avobankless litepaper
+            </p>
           </div>
           <div className="hidden md:block">
             <img
