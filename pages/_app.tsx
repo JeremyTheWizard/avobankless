@@ -13,8 +13,8 @@ import { useRouter } from "next/router";
 import { Provider } from "react-redux";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
+import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
-
 import Navbar from "../components/navbar/Navbar";
 import NavbarApp from "../components/navbar/NavbarApp";
 import { MaterialTheme } from "../MaterialTheme";
@@ -42,8 +42,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     ],
     [
       alchemyProvider({
-        // This is Alchemy's default API key.
-        apiKey: "aCqen3L7WkFxk3q30VBgAiuS03nEAbx4",
+        apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
+      }),
+      infuraProvider({
+        apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY,
       }),
       publicProvider(),
     ]
@@ -114,12 +116,3 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
-function infuraProvider(arg0: {
-  apiKey: string | undefined;
-}): import("wagmi").ChainProviderFn<
-  import("@wagmi/core").Provider,
-  import("@wagmi/core").WebSocketProvider,
-  import("wagmi").Chain
-> {
-  throw new Error("Function not implemented.");
-}
