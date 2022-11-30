@@ -64,7 +64,6 @@ const useCreateFlow = () => {
       setCreateFlowStatus("Success");
     } catch (e) {
       setCreateFlowStatus("Exception");
-      alert("Error creating flow");
       return;
     }
   };

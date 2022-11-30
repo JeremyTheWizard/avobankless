@@ -48,7 +48,6 @@ const useGetFlowInfo = (account: string | undefined) => {
     const receiver = deployments.contracts.SuperfluidCallbacks.address;
 
     if (!superToken) {
-      alert("Error getting superToken");
       return;
     }
 

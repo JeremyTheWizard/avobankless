@@ -1,6 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { NextPage } from "next";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import Deposit from "../../components/deposit/Deposit";
@@ -47,62 +48,71 @@ const LendingPools: NextPage = () => {
     let styledLendingPools = [];
 
     for (let i = 0; i < poolsInfo.length; i++) {
-      const creditScore = Math.floor(Math.random() * 850 + 1);
-      const processedCreditScore = processCreditScore(creditScore);
-      let creditScoreColor;
-      if (processedCreditScore <= 25) {
-        creditScoreColor = "#dc2626";
-      } else if (processedCreditScore <= 50) {
-        creditScoreColor = "#fbbf24";
-      } else if (processedCreditScore <= 75) {
-        creditScoreColor = "#60a5fa";
+      // cant deposit to pool that has already borrowed
+      if (poolsInfo[i].value.normalizedBorrowedAmount.toString() !== "0") {
+        styledLendingPools.push(<></>);
       } else {
-        creditScoreColor = "#22c55e";
+        const creditScore = Math.floor(Math.random() * 850 + 1);
+        const processedCreditScore = processCreditScore(creditScore);
+        let creditScoreColor;
+        if (processedCreditScore <= 25) {
+          creditScoreColor = "#dc2626";
+        } else if (processedCreditScore <= 50) {
+          creditScoreColor = "#fbbf24";
+        } else if (processedCreditScore <= 75) {
+          creditScoreColor = "#60a5fa";
+        } else {
+          creditScoreColor = "#22c55e";
+        }
+        styledLendingPools.push(
+          <>
+            <div className="flex gap-xs items-center">
+              <Image src={dai} alt="dai" className="m-0" />
+              <span className="text-base">DAI</span>
+            </div>
+            <span className="text-base">
+              {formatEtherWithCustomDecimals(
+                poolsInfo[i]?.value?.normalizedAvailableDeposits
+              ) ?? ""}
+            </span>
+            <span className="text-base">
+              {poolsInfo[i]?.value
+                ? Number(
+                    formatEther(
+                      String(
+                        parseInt(
+                          poolsInfo[i]?.value?.normalizedBorrowedAmount?._hex,
+                          16
+                        ) ?? ""
+                      )
+                    )
+                  ).toFixed(0)
+                : ""}
+            </span>
+            <span className="text-base">
+              {formatUnits(
+                poolsAggregates[
+                  i
+                ].value?.weightedAverageLendingRate?.toString(),
+                16
+              )}
+              %
+            </span>
+            <span className="text-base">
+              {(Math.random() * 2 + 0.5).toFixed(2)}%
+            </span>
+            <span className="text-base">2.5%</span>
+            <span style={{ color: creditScoreColor }}>{creditScore}</span>
+            <ScoreButton
+              text="Deposit"
+              onClick={() => {
+                setOpenBorrow(true);
+                dispatch(setSelectedPool(poolsAddresses[i]));
+              }}
+            />
+          </>
+        );
       }
-      styledLendingPools.push(
-        <>
-          <div className="flex gap-xs items-center">
-            <img src={dai.src} alt="dai" className="m-0" />
-            <span className="text-base">DAI</span>
-          </div>
-          <span className="text-base">
-            {formatEtherWithCustomDecimals(
-              poolsInfo[i]?.value?.normalizedAvailableDeposits
-            ) ?? ""}
-          </span>
-          <span className="text-base">
-            {Number(
-              formatEther(
-                String(
-                  parseInt(
-                    poolsInfo[i]?.value?.normalizedBorrowedAmount?._hex,
-                    16
-                  ) ?? ""
-                )
-              )
-            ).toFixed(0) ?? ""}
-          </span>
-          <span className="text-base">
-            {formatUnits(
-              poolsAggregates[i].value?.weightedAverageLendingRate?.toString(),
-              16
-            )}
-            %
-          </span>
-          <span className="text-base">
-            {(Math.random() * 2 + 0.5).toFixed(2)}%
-          </span>
-          <span className="text-base">2.5%</span>
-          <span style={{ color: creditScoreColor }}>{creditScore}</span>
-          <ScoreButton
-            text="Deposit"
-            onClick={() => {
-              setOpenBorrow(true);
-              dispatch(setSelectedPool(poolsAddresses[i]));
-            }}
-          />
-        </>
-      );
       setLendingPools(styledLendingPools);
       lendingPoolsFetched.current = true;
     }
@@ -123,7 +133,7 @@ const LendingPools: NextPage = () => {
         <div className="flex gap-sm w-full">
           <div className="flex md:gap-md gap-sm items-center justify-evenly w-full">
             <div className="flex gap-xs items-center ">
-              <img src={coin.src} alt="coin" />
+              <Image src={coin} alt="coin" />
               <h4 className="font-bold">Lending Pools</h4>
             </div>
             <SearchBar placeholder="Search by ENS or address..." size="lg" />

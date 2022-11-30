@@ -3,6 +3,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import Button from "@mui/material/Button";
 import MobileStepper from "@mui/material/MobileStepper";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
 import * as React from "react";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
@@ -20,7 +21,7 @@ const slides = [
     }
     key={1}
   >
-    <img src={borrow.src} alt="Hand holding coin" className="w-40 h-40 m-0" />
+    <Image src={borrow} alt="Hand holding coin" className="w-40 h-40 m-0" />
     <h2 className="text-almostWhite">Borrowing any time</h2>
     <p>
       Receive competitive Lending Rates in a crypto credit line in the form of a
@@ -33,7 +34,7 @@ const slides = [
     }
     key={2}
   >
-    <img src={lend.src} alt="hand giving cash" className="w-40 h-40 m-0" />
+    <Image src={lend} alt="hand giving cash" className="w-40 h-40 m-0" />
     <h2 className="text-almostWhite">Lend with Autopay</h2>
     <p>
       Take advantage of payment streams to automatically amortize loans with
@@ -46,7 +47,7 @@ const slides = [
       "flex-col items-center relative gap-sm pb-14 max-w-sm sm:max-w-xl md:max-w-2xl "
     }
   >
-    <img src={creditScore.src} alt="eth badge" className="w-40 h-40 m-0" />
+    <Image src={creditScore} alt="eth badge" className="w-40 h-40 m-0" />
     <h2 className="text-almostWhite ">NFT Credit Score</h2>
     <p>
       Connect your history DeFi on-chain into a single composable asset and

@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type Props = {
-  loans: undefined | [];
+  isLoans: boolean;
   open: boolean;
 };
 
 const initialState: Props = {
-  loans: undefined,
+  isLoans: false,
   open: false,
 };
 
@@ -14,8 +14,8 @@ export const createPoolSlice = createSlice({
   name: "createPoolSlice",
   initialState,
   reducers: {
-    setLoans: (state, action) => {
-      state.loans = action.payload;
+    dispatchIsLoans: (state, action: { payload: boolean; type: string }) => {
+      state.isLoans = action.payload;
     },
 
     toggleOpen: (state) => {
@@ -29,6 +29,6 @@ export const getCreatePoolSlice = (state: { createPoolSlice: Props }) =>
   state.createPoolSlice;
 
 // Exports all actions
-export const { setLoans, toggleOpen } = createPoolSlice.actions;
+export const { dispatchIsLoans, toggleOpen } = createPoolSlice.actions;
 
 export default createPoolSlice.reducer;

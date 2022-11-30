@@ -199,7 +199,6 @@ const useBorrow = () => {
 
   const borrow = async (_loanAmount: string) => {
     if (!account) {
-      alert("No account found");
       return;
     }
 

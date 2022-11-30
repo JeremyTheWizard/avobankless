@@ -5,9 +5,9 @@ import {
   lightTheme,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
+import Image from "next/image";
 
 import { Config, DAppProvider, Goerli } from "@usedapp/core";
-import { getDefaultProvider } from "ethers";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { Provider } from "react-redux";
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const config: Config = {
     readOnlyChainId: Goerli.chainId,
     readOnlyUrls: {
-      [Goerli.chainId]: getDefaultProvider("goerli"),
+      [Goerli.chainId]: process.env.NEXT_PUBLIC_ETH_NODE_URI_GOERLI ?? "",
     },
   };
 
@@ -72,7 +72,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
     const color = "#fff";
     return ensImage ? (
-      <img
+      <Image
         src={ensImage}
         width={size}
         height={size}
@@ -80,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         alt="ens"
       />
     ) : (
-      <img
+      <Image
         src="/avobankless-pet-circle.png"
         width={size}
         height={size}

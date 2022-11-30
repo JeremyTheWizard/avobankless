@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import ScoreButton from "../navbar/buttons/ScoreButton";
 
 export const ConnectButton1 = () => {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { activateBrowserWallet, deactivate } = useEthers();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const ConnectButton1 = () => {
     } else {
       deactivate();
     }
-  }, [address, activateBrowserWallet]);
+  }, [address, activateBrowserWallet, deactivate, isConnected]);
 
   return (
     <ConnectButton.Custom>

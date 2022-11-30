@@ -1,6 +1,7 @@
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import Image from "next/image";
 import React, { FC, useEffect, useState } from "react";
 import dai from "../../public/dai.png";
 
@@ -38,7 +39,7 @@ const MaxWrapper = styled("div")(({ theme }) => ({
 
 const DAI = (
   <div className="flex gap-xs items-center">
-    <img src={dai.src} alt="" />
+    <Image src={dai} alt="" />
     <span>DAI</span>
   </div>
 );

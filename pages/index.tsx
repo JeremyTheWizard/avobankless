@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import router from "next/router";
 import ScoreButton from "../components/navbar/buttons/ScoreButton";
 import SlideDeckButton from "../components/navbar/buttons/SlideDeckButton";
@@ -80,48 +81,48 @@ const Home: NextPage = () => {
             </p>
           </div>
           <div className="hidden md:block">
-            <img
-              src={imBankless.src}
+            <Image
+              src={imBankless}
               alt="representation of the protocol"
               className="w-full object-fit"
             />
           </div>
         </section>
-        <section className="relative hidden lg:grid grid-cols-3 justify-center gap-md prose-img:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite">
+        <section className="relative hidden lg:grid grid-cols-3 justify-center gap-md prose-Image:mb-0 text-center prose-h2:font-bold prose-h2:text-almostWhite">
           <GradientBox
             twProps={"flex-col items-center relative gap-sm pb-14 relative"}
           >
-            <img
-              src={borrow.src}
-              alt="Hand holding coin"
-              className="w-40 h-40"
-            />
+            <Image src={borrow} alt="Hand holding coin" className="w-40 h-40" />
             <h2>Borrowing any time</h2>
             <p>
               Receive competitive Lending Rates in a crypto credit line in the
               form of a liquidity pool where you can withdraw at any time.
             </p>
-            <img
-              src={superfluid.src}
-              alt="superfluid stream of money"
-              className="w-20 h-28 absolute -right-20"
-            />
+            <div className="absolute w-20 h-28 -right-20">
+              <Image
+                src={superfluid}
+                alt="superfluid stream of money"
+                layout="fill"
+              />
+            </div>
           </GradientBox>
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
-            <img src={lend.src} alt="hand giving cash" className="w-40 h-40" />
+            <Image src={lend} alt="hand giving cash" className="w-40 h-40" />
             <h2>Lend with Autopay</h2>
             <p>
               Take advantage of payment streams to automatically amortize loans
               with consistent returns. Always with liquidity.
             </p>
-            <img
-              src={superfluid.src}
-              alt="superfluid stream of money"
-              className="w-20 h-28 absolute -right-20 "
-            />
+            <div className="absolute w-20 h-28 -right-20">
+              <Image
+                src={superfluid}
+                alt="superfluid stream of money"
+                layout="fill"
+              />
+            </div>
           </GradientBox>
           <GradientBox twProps={"flex-col items-center relative gap-sm pb-14"}>
-            <img src={creditScore.src} alt="eth badge" className="w-40 h-40" />
+            <Image src={creditScore} alt="eth badge" className="w-40 h-40" />
             <h2>NFT Credit Score</h2>
             <p>
               Connect your history DeFi on-chain into a single composable asset
@@ -134,8 +135,8 @@ const Home: NextPage = () => {
         </div>
         <div className="grid md:grid-cols-2 xl:gap-0 gap-md ">
           <div className="w-full order-1 md:order-0 mx-auto">
-            <img
-              src={cashMan.src}
+            <Image
+              src={cashMan}
               alt="Man setting in pile of eth"
               className="w-full max-w-2xl "
             />

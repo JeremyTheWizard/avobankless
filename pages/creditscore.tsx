@@ -1,9 +1,9 @@
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 import Borrow from "../components/borrow.tsx/Borrow";
 import CreatePool from "../components/create-pool/CreatePool";
-import Tabs from "../components/credit-score/BasicTabs";
+import BasicTabs from "../components/credit-score/BasicTabs";
 import GradientBorder from "../components/general/GradientBorder";
 import GradientBox from "../components/general/GradientBox";
 import GradientCircularGaugeIndicator from "../components/general/GradientCircularGaugeIndicator";
@@ -18,44 +18,41 @@ import { getWithdrawState } from "../slices/withdrawSlice";
 import { useDispatch, useSelector } from "../store/store";
 
 const CreditScore: React.FC = () => {
-  const { account } = useEthers();
+  const { address, status } = useAccount();
   const [creditScore, setCreditScore] = useState<Number | undefined>();
-  const { loans } = useSelector(getCreatePoolSlice);
+  const { isLoans } = useSelector(getCreatePoolSlice);
   const [openCreatePool, setOpenCreatePool] = useState(false);
   const dispatch = useDispatch();
   const { userDepositsTotal } = useSelector(getUserPositionsState);
   const { userTotalBorrowed } = useSelector(getBorrowState);
   const { userAvailableTotal } = useSelector(getWithdrawState);
+  const [disabled, setDisabled] = useState<boolean>();
 
   const updateExistingWalletScore = useCallback(async () => {
-    if (account) {
+    if (address) {
       let score;
       try {
         score = await axios
-          .get(`api/creditscore/${account}`)
+          .get(`api/creditscore/${address}`)
           .then((res) => res.data.score);
       } catch (err) {
         return err;
       }
       setCreditScore(score);
     }
-  }, [account]);
-
-  // useEffect(() => {
-  //   updateExistingWalletScore();
-  // }, [updateExistingWalletScore]);
+  }, [address]);
 
   useEffect(() => {
-    if (!account) {
+    if (!address) {
       setCreditScore(undefined);
     }
-  }, [!account]);
+  }, [address]);
 
   const calculateWalletScore = async () => {
     let score;
     try {
       score = await axios
-        .post(`api/creditscore/${account}`)
+        .post(`api/creditscore/${address}`)
         .then((res) => res.data.score);
     } catch (err) {
       return err;
@@ -64,6 +61,14 @@ const CreditScore: React.FC = () => {
       setCreditScore(score);
     }
   };
+
+  useEffect(() => {
+    if (address) {
+      setDisabled(false);
+      return;
+    }
+    setDisabled(true);
+  }, [address]);
 
   return (
     <>
@@ -99,7 +104,7 @@ const CreditScore: React.FC = () => {
             </div>
           </GradientBox>
           <div className="w-11/12 mx-auto">
-            {loans && !loans.length && account && (
+            {!isLoans && address && (
               <ScoreButton
                 onClick={() => dispatch(toggleOpen())}
                 text="Create Pool"
@@ -170,8 +175,8 @@ const CreditScore: React.FC = () => {
                 <div className="w-full max-w-xs">
                   <ScoreButton
                     text="Calculate Score"
-                    disabled={!account && true}
-                    tooltip={!account ? "Connect your wallet first" : ""}
+                    disabled={disabled}
+                    tooltip={!address ? "Connect your wallet first" : ""}
                     onClick={() => calculateWalletScore()}
                   />
                 </div>
@@ -179,9 +184,9 @@ const CreditScore: React.FC = () => {
                   <SlideDeckButton
                     size="md"
                     text="Verify"
-                    disabled={(!account || !creditScore) && true}
+                    disabled={(!address || !creditScore) && true}
                     tooltip={
-                      account!
+                      address!
                         ? "Connect your wallet first"
                         : !creditScore
                         ? "Calculate your creditScore first"
@@ -212,7 +217,7 @@ const CreditScore: React.FC = () => {
               </div>
             </GradientBox>
             <div className="w-11/12 mx-auto">
-              {loans === undefined && account && (
+              {isLoans === false && address && (
                 <ScoreButton
                   onClick={() => setOpenCreatePool(true)}
                   text="Create Pool"
@@ -225,7 +230,7 @@ const CreditScore: React.FC = () => {
                 twPropsParent={"h-full w-full "}
                 twPropsChild={"overflow-y-scroll !p-0 "}
               >
-                <Tabs />
+                <BasicTabs />
               </GradientBorder>
             </div>
           </div>
@@ -235,7 +240,7 @@ const CreditScore: React.FC = () => {
             twPropsParent={"h-full w-full "}
             twPropsChild={"overflow-y-scroll !items-start !p-0 "}
           >
-            <Tabs />
+            <BasicTabs />
           </GradientBorder>
         </div>
       </div>

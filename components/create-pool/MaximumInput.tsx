@@ -1,5 +1,6 @@
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
+import Image from "next/image";
 import React, { FC, useState } from "react";
 import dai from "../../public/dai.png";
 
@@ -34,7 +35,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 const DAI = (
   <div className="flex gap-xs items-center">
-    <img src={dai.src} alt="" />
+    <Image src={dai} alt="" />
     <span>DAI</span>
   </div>
 );

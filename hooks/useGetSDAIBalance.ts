@@ -41,9 +41,7 @@ const useGetSDAIBalance = () => {
         account: account,
       });
       return sDAIBalance;
-    } catch (e) {
-      alert("Error getting sDAI balance");
-    }
+    } catch (e) {}
   };
 
   return getSDAIBalance;

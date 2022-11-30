@@ -54,7 +54,6 @@ const useFDAIUpgrade = () => {
         setFDAIUpgradeStatus("Exception");
       }
     } else {
-      alert("web3 provider not found");
     }
   };
 

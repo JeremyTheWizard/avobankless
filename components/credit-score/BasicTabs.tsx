@@ -5,6 +5,7 @@ import Tabs from "@mui/material/Tabs";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import { formatEther, formatUnits } from "ethers/lib/utils";
+import Image from "next/image";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { MdOpenInNew } from "react-icons/md";
@@ -18,7 +19,10 @@ import useGetPositionsInfo from "../../hooks/useGetPositionsInfo";
 import useGetPositionsRepatriations from "../../hooks/useGetPositionsRepartitions";
 import dai from "../../public/dai.png";
 import { dispatchTotalBorrowed, openBorrow } from "../../slices/borrowSlice";
-import { getCreatePoolSlice, setLoans } from "../../slices/createPoolSlice";
+import {
+  dispatchIsLoans,
+  getCreatePoolSlice,
+} from "../../slices/createPoolSlice";
 import {
   dispatchUserDepositsTotal,
   dispatchUserTokenIds,
@@ -69,9 +73,10 @@ function a11yProps(index: number) {
 export default function BasicTabs({}) {
   const [value, setValue] = useState(0);
   const { account } = useEthers();
-  const { loans } = useSelector(getCreatePoolSlice);
+  const { isLoans } = useSelector(getCreatePoolSlice);
   const [deposits, setDeposits] = useState<Array<JSX.Element>>([]);
   const { userTokenIds } = useSelector(getUserPositionsState);
+  const [loans, setLoans] = useState<JSX.Element[]>();
 
   const dispatch = useDispatch();
   const userPositionsInfo = useGetPositionsInfo(userTokenIds);
@@ -83,7 +88,7 @@ export default function BasicTabs({}) {
   const getUserPositions = useCallback(async () => {
     if (!account) {
       setDeposits([]);
-      dispatch(setLoans([]));
+      dispatch(dispatchIsLoans(false));
       dispatch(dispatchUserTokenIds([]));
 
       return;
@@ -153,7 +158,7 @@ export default function BasicTabs({}) {
             className="grid grid-cols-5 justify-items-center items-center "
           >
             <div className="flex gap-xs items-center">
-              <img src={dai.src} alt="dai" className="m-0" />
+              <Image src={dai} alt="dai" className="m-0" />
               <h5>Dai</h5>
             </div>
             <span className="text-base">0</span>
@@ -207,7 +212,7 @@ export default function BasicTabs({}) {
   useEffect(() => {
     const styledLoans = [];
     if (!poolAggregates) {
-      dispatch(setLoans([]));
+      dispatch(dispatchIsLoans(false));
       return;
     }
 
@@ -225,7 +230,7 @@ export default function BasicTabs({}) {
           <>
             <div className="grid grid-cols-4 justify-items-center items-center">
               <div className="flex gap-xs items-center">
-                <img src={dai.src} alt="dai" className="m-0" />
+                <Image src={dai} alt="dai" className="m-0" />
                 <span className="text-base">DAI</span>
               </div>
               <span className="text-base">
@@ -248,9 +253,10 @@ export default function BasicTabs({}) {
             </div>
           </>
         );
-        dispatch(setLoans(styledLoans));
+        setLoans(styledLoans);
+        dispatch(dispatchIsLoans(true));
       } else {
-        dispatch(setLoans(undefined));
+        dispatch(dispatchIsLoans(false));
       }
     }
   }, [userPoolState, dispatch, poolAggregates]);
@@ -321,7 +327,7 @@ export default function BasicTabs({}) {
               <h6 className="text-base text-darkGreen">Avg. Interest</h6>
               <h6 className="text-base text-darkGreen">Borrowed</h6>
             </div>
-            {loans && loans}
+            {isLoans && loans}
           </div>
         </div>
         {
@@ -347,7 +353,7 @@ export default function BasicTabs({}) {
               </span>
             ) : (
               <span className="text-lg md:text-lg self-center my-auto p-sm text-center">
-                Create a pool first to be able to borrow and see your loans.
+                Create a pool first to be able to borrow and see your isLoans.
               </span>
             )}
           </div>

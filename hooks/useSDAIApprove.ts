@@ -54,7 +54,6 @@ const useSDAIApprove = () => {
         setSDAIApproveStatus("Exception");
       }
     } else {
-      alert("web3 provider not found");
     }
   };
 

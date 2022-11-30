@@ -7,7 +7,6 @@ const useGetSF = () => {
 
   const getSF = async () => {
     if (!library) {
-      alert("Library not found");
       return;
     }
 
